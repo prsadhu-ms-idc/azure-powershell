@@ -28,7 +28,8 @@ namespace Microsoft.Azure.Commands.Common.Authentication
             IAzureTokenCache tokenCache,
             string tenantId,
             string resourceId,
-            Action<string> promptAction) : base(authenticationClientFactory, environment, tokenCache, tenantId, resourceId)
+            string userId,
+            Action<string> promptAction) : base(authenticationClientFactory, environment, tokenCache, tenantId, resourceId, userId)
         {
             PromptAction = promptAction;
         }

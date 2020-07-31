@@ -534,10 +534,10 @@ namespace Microsoft.Azure.Commands.Common.Authentication.Factories
                         //else 
                         if (account.IsPropertySet("UseDeviceAuth"))
                         {
-                            return new DeviceCodeParameters(authenticationClientFactory, environment, tokenCache, tenant, resourceId);
+                            return new DeviceCodeParameters(authenticationClientFactory, environment, tokenCache, tenant, resourceId, account.Id);
                         }
 
-                        return new InteractiveParameters(authenticationClientFactory, environment, tokenCache, tenant, resourceId, promptAction);
+                        return new InteractiveParameters(authenticationClientFactory, environment, tokenCache, tenant, resourceId, account.Id, promptAction);
                     }
 
                     return new UsernamePasswordParameters(authenticationClientFactory, environment, tokenCache, tenant, resourceId, account.Id, password);

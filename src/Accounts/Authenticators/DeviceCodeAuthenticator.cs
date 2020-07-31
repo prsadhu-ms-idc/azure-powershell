@@ -13,6 +13,8 @@
 // ----------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,68 +33,72 @@ namespace Microsoft.Azure.PowerShell.Authenticators
 {
     public class DeviceCodeAuthenticator : DelegatingAuthenticator
     {
-        private DeviceCodeCredential DeviceCodeCredential { get; set; }
-        private AuthenticationRecord AuthenticationRecord { get; set; }
+        //private DeviceCodeCredential DeviceCodeCredential { get; set; }
+        //private AuthenticationRecord AuthenticationRecord { get; set; }
 
-        public DeviceCodeAuthenticator()
+        private bool EnablePersistenceCache { get; set; }
+
+        private ConcurrentDictionary<string, DeviceCodeCredential> UserCredentialMap = new ConcurrentDictionary<string, DeviceCodeCredential>();
+
+        public DeviceCodeAuthenticator(bool enablePersistentCache = true)
         {
-            var options = new DeviceCodeCredentialOptions()
-            {
-                ClientId = AuthenticationHelpers.PowerShellClientId,
-                EnablePersistentCache = true,
-                DisableAutomaticAuthentication = true
-            };
-            DeviceCodeCredential = new DeviceCodeCredential(DeviceCodeFunc, options);
+            EnablePersistenceCache = enablePersistentCache;
         }
-
-
-        //public override Task<IAccessToken> Authenticate(AuthenticationParameters parameters, CancellationToken cancellationToken)
-        //{
-        //    var authenticationClientFactory = parameters.AuthenticationClientFactory;
-        //    var onPremise = parameters.Environment.OnPremise;
-        //    var resource = parameters.Environment.GetEndpoint(parameters.ResourceId) ?? parameters.ResourceId;
-        //    var scopes = AuthenticationHelpers.GetScope(onPremise, resource);
-        //    var clientId = AuthenticationHelpers.PowerShellClientId;
-        //    var authority = onPremise ?
-        //                        parameters.Environment.ActiveDirectoryAuthority :
-        //                        AuthenticationHelpers.GetAuthority(parameters.Environment, parameters.TenantId);
-        //    TracingAdapter.Information(string.Format("[DeviceCodeAuthenticator] Creating IPublicClientApplication - ClientId: '{0}', Authority: '{1}', UseAdfs: '{2}'", clientId, authority, onPremise));
-        //    var publicClient = authenticationClientFactory.CreatePublicClient(clientId: clientId, authority: authority, useAdfs: onPremise);
-        //    TracingAdapter.Information(string.Format("[DeviceCodeAuthenticator] Calling AcquireTokenWithDeviceCode - Scopes: '{0}'", string.Join(",", scopes)));
-        //    var response = GetResponseAsync(publicClient, scopes, cancellationToken);
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    return AuthenticationResultToken.GetAccessTokenAsync(response);
-        //}
 
         public override Task<IAccessToken> Authenticate(AuthenticationParameters parameters, CancellationToken cancellationToken)
         {
+            var deviceCodeParameters = parameters as DeviceCodeParameters;
             var authenticationClientFactory = parameters.AuthenticationClientFactory;
             var onPremise = parameters.Environment.OnPremise;
             var resource = parameters.Environment.GetEndpoint(parameters.ResourceId) ?? parameters.ResourceId;
             var scopes = AuthenticationHelpers.GetScope(onPremise, resource);
-            //var clientId = AuthenticationHelpers.PowerShellClientId;
+            var clientId = AuthenticationHelpers.PowerShellClientId;
             var authority = onPremise ?
                                 parameters.Environment.ActiveDirectoryAuthority :
                                 AuthenticationHelpers.GetAuthority(parameters.Environment, parameters.TenantId);
 
-            //var codeCredential = new DeviceCodeCredential(DeviceCodeFunc, parameters.TenantId, clientId);
-
             TokenRequestContext requestContext = new TokenRequestContext(scopes);
-            if(AuthenticationRecord != null)
-            {
-                var authTask = DeviceCodeCredential.AuthenticateAsync(cancellationToken);
 
+            DeviceCodeCredential codeCredential = null;
+            if(!string.IsNullOrEmpty(deviceCodeParameters.UserId))
+            {
+                if (!UserCredentialMap.TryGetValue(deviceCodeParameters.UserId, out codeCredential))
+                {
+                    //MsalPublicApplication 
+                    DeviceCodeCredentialOptions options = new DeviceCodeCredentialOptions()
+                    {
+                        ClientId = clientId,
+                        TenantId = parameters.TenantId,
+                        EnablePersistentCache = EnablePersistenceCache,
+                        AllowUnencryptedCache = true,
+                        AuthenticationRecord = new AuthenticationRecord(
+                            deviceCodeParameters.UserId,
+                            authority: null,
+                            homeAccountId: null,
+                            tenantId: parameters.TenantId,
+                            clientId: clientId)
+                    };
+                    codeCredential = new DeviceCodeCredential(DeviceCodeFunc, options);
+                }
+                var tokenTask = codeCredential.GetTokenAsync(requestContext, cancellationToken);
+                return MsalAccessToken.GetAccessTokenAsync(tokenTask, parameters.TenantId, deviceCodeParameters.UserId);
+            }
+            else//first time login
+            {
+                DeviceCodeCredentialOptions options = new DeviceCodeCredentialOptions()
+                {
+                    ClientId = clientId,
+                    TenantId = parameters.TenantId,
+                    EnablePersistentCache = EnablePersistenceCache,
+                    AllowUnencryptedCache = true,
+                };
+                codeCredential = new DeviceCodeCredential(DeviceCodeFunc, options);
+                var authTask = codeCredential.AuthenticateAsync(cancellationToken);
                 return MsalAccessToken.GetAccessTokenAsync(
                     authTask,
-                    () => DeviceCodeCredential.GetTokenAsync(requestContext, cancellationToken),
-                    (AuthenticationRecord record) => { AuthenticationRecord = record; } );
+                    () => codeCredential.GetTokenAsync(requestContext, cancellationToken),
+                    (AuthenticationRecord record) => { UserCredentialMap[record.Username] = codeCredential ; });
             }
-            else
-            {
-                var tokenTask = DeviceCodeCredential.GetTokenAsync(requestContext, cancellationToken);
-                return MsalAccessToken.GetAccessTokenAsync(tokenTask, AuthenticationRecord.TenantId, AuthenticationRecord.Username);
-            }
-
 
             //TracingAdapter.Information(string.Format("[DeviceCodeAuthenticator] Creating IPublicClientApplication - ClientId: '{0}', Authority: '{1}', UseAdfs: '{2}'", clientId, authority, onPremise));
             //var publicClient = authenticationClientFactory.CreatePublicClient(clientId: clientId, authority: authority, useAdfs: onPremise);

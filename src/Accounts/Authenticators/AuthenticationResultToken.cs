@@ -107,8 +107,7 @@ namespace Microsoft.Azure.PowerShell.Authenticators
         {
             var token = await result;
 
-            //TODO: remove eriwan after Azure.Identity change
-            return new MsalAccessToken(token.Token, token.TenantId ?? tenantId, token.UserId ?? userId);//?? "eriwan@microsoft.com");
+            return new MsalAccessToken(token.Token, tenantId, userId);
         }
 
         public static async Task<IAccessToken> GetAccessTokenAsync(
