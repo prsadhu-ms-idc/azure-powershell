@@ -271,7 +271,18 @@ Starts replication for the specified server.
 
 ## SYNTAX
 
-### ByIdDefaultUser (Default)
+### ByNameDefaultUser (Default)
+```
+New-AzMigrateServerReplication -DiskType <DiskAccountType> -LicenseType <LicenseType> -MachineName <String>
+ -OSDiskID <String> -ProjectName <String> -ResourceGroupName <String> -TargetNetworkId <String>
+ -TargetResourceGroupId <String> -TargetSubnetName <String> -TargetSubscriptionId <String>
+ -TargetVMName <String> -TargetVMSize <String> [-PerformAutoResync <String>] [-SubscriptionId <String>]
+ [-TargetAvailabilitySet <String>] [-TargetAvailabilityZone <String>]
+ [-TargetBootDiagnosticsStorageAccount <String>] [-VMWarerunasaccountID <String>] [-DefaultProfile <PSObject>]
+ [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
+### ByIdDefaultUser
 ```
 New-AzMigrateServerReplication -DiskType <DiskAccountType> -LicenseType <LicenseType> -OSDiskID <String>
  -TargetNetworkId <String> -TargetResourceGroupId <String> -TargetSubnetName <String>
@@ -291,17 +302,6 @@ New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -LicenseT
  [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
-### ByNameDefaultUser
-```
-New-AzMigrateServerReplication -DiskType <DiskAccountType> -LicenseType <LicenseType> -MachineName <String>
- -OSDiskID <String> -ProjectName <String> -ResourceGroupName <String> -TargetNetworkId <String>
- -TargetResourceGroupId <String> -TargetSubnetName <String> -TargetSubscriptionId <String>
- -TargetVMName <String> -TargetVMSize <String> [-PerformAutoResync <String>] [-SubscriptionId <String>]
- [-TargetAvailabilitySet <String>] [-TargetAvailabilityZone <String>]
- [-TargetBootDiagnosticsStorageAccount <String>] [-VMWarerunasaccountID <String>] [-DefaultProfile <PSObject>]
- [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
-```
-
 ### ByNamePowerUser
 ```
 New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -LicenseType <LicenseType>
@@ -318,27 +318,37 @@ The New-AzMigrateServerReplication cmdlet starts the replication for a particula
 
 ## EXAMPLES
 
-### Example 1: Power User
+### Example 1: Power User, By Name
 ```powershell
 PS C:\> [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IVMwareCbtDiskInput[]]$DisksToInclude = @()
 PS C:\> $OSDisk = New-AzMigrateDiskMapping -DiskID '6000C299-343d-7bcd-c05e-a94bd63316dd' -DiskType 'Standard_LRS' -IsOSDisk 'true'
 PS C:\> $DataDisk = New-AzMigrateDiskMapping -DiskID '7000C299-343d-7bcd-c05e-a94bd63316dd' -DiskType 'Standard_LRS' -IsOSDisk 'false'
 PS C:\> $DisksToInclude += $OSDisk
 PS C:\> $DisksToInclude += $DataDisk
+PS C:\> New-AzMigrateServerReplication -DisksToInclude $DisksToInclude -LicenseType 'NoLicenseType'
+ -MachineName 'demo1' -PerformAutoResync 'true' -ProjectName 'migrate1' -ResourceGroupName 'demorg1'
+ -TargetNetworkId $tgtNId -TargetResourceGroupId $tgtRGID -TargetSubnetName 'default'
+ -TargetSubscriptionId $tgtSId -TargetVMName 'demo-test' -TargetVMSize 'D4s_v3'
 
-{{ Add output here }}
+Location Name                                                                                                      Type             
+ -------- ----                                                                                                      ----                      
+          bcdr-vcenter-fareast-corp-micro-cfcc5a24-a40e-56b9-a6af-e206c9ca4f93_50063baa-9806-d6d6-7e09-c0ae87309b4f Microsoft.Recov… 
 ```
 
-{{ Add description here }}
+Power User scenario, when machine has multiple disks
 
-### Example 2: {{ Add title here }}
+### Example 2: Default User, By Id
 ```powershell
-PS C:\> {{ Add code here }}
+PS C:\> New-AzMigrateServerReplication -DiskType 'Standard_LRS' -LicenseType 'NoLicenseType' -OSDiskID $diskID
+ -TargetNetworkId $NId -TargetResourceGroupId $GId -TargetSubnetName $SName
+ -TargetSubscriptionId $SId -TargetVMName 'demo-test' -TargetVMSize 'D4s_v3' -VMwareMachineId $MId
 
-{{ Add output here }}
+Location Name                                                                                                      Type             
+ -------- ----                                                                                                      ----                      
+          bcdr-vcenter-fareast-corp-micro-cfcc5a24-a40e-56b9-a6af-e206c9ca4f93_50063baa-9806-d6d6-7e09-c0ae87309b4f Microsoft.Recov… 
 ```
 
-{{ Add description here }}
+Default User Scenario, when machine has one disk
 
 ## PARAMETERS
 
@@ -737,6 +747,12 @@ COMPLEX PARAMETER PROPERTIES
 To create the parameters described below, please use the New-AzMigrateDiskMapping cmdlet.
 
 DISKSTOINCLUDE <IVMwareCbtDiskInput[]>: Specifies the disks on the source server to be included for replication.
+  - `DiskId <String>`: The disk Id.
+  - `IsOSDisk <String>`: A value indicating whether the disk is the OS disk.
+  - `LogStorageAccountId <String>`: The log storage account ARM Id.
+  - `LogStorageAccountSasSecretName <String>`: The key vault secret name of the log storage account.
+  - `[DiskEncryptionSetId <String>]`: The DiskEncryptionSet ARM Id.
+  - `[DiskType <DiskAccountType?>]`: The disk type.
 
 
 ## RELATED LINKS
