@@ -32,7 +32,7 @@
 
 - Describe how your feature is intended to be used by customers.
 
-Azure Migrate PowerShell cmdlets for the VMware to Azure scenario will enable IT Pro administrators to automate their migration factories and make it easy to perform repetitive migration activities (as most of the migration activities are done in stages). It will also enable at scale automation support for customers (currently limited due to portal constraints), a repetitive ask from our customers.  The focus will be on allowing end to end scenario enablement for VMware to Azure scenario by giving more power to the user without exposing the additional complexity inherent in Azure Migrate’s migration architecture.  
+- Azure Migrate PowerShell cmdlets for the VMware to Azure scenario will enable IT Pro administrators to automate their migration factories and make it easy to perform repetitive migration activities (as most of the migration activities are done in stages). It will also enable at scale automation support for customers (currently limited due to portal constraints), a repetitive ask from our customers.  The focus will be on allowing end to end scenario enablement for VMware to Azure scenario by giving more power to the user without exposing the additional complexity inherent in Azure Migrate’s migration architecture.  
     1. Enable IT Pros to achieve to automate VMware to Azure agentless migration scenario 
     2. Will allow scripting of Azure Migrate migration operations for scale deployments 
     3. Equip power users to unleash Azure Migrate’s full potential through simplified customization 
