@@ -22,7 +22,7 @@
 
 - PM contact (email + github alias) 
 
-    - `rahugup@microsoft.com`
+    - `rahugup@microsoft.com(rahulg1190)`
 
 - Other people who should attend a design review (email)
 
@@ -47,18 +47,7 @@
 
     - `{ SAMPLE USAGE HERE }`
 
-## Syntax changes
-
-This should include PowerShell-help style syntax descriptions of all new and changed cmdlets, similar to the syntax portion of PowerShell help (or markdown help), for example:
-
 ### New Cmdlet
----
-external help file:
-Module Name: Az.Migrate
-online version: https://docs.microsoft.com/en-us/powershell/module/az.migrate/initialize-azmigratereplicationinfrastructure
-schema: 2.0.0
----
-
 # Initialize-AzMigrateReplicationInfrastructure
 
 ## SYNOPSIS
@@ -79,21 +68,11 @@ The Initialize-AzMigrateReplicationInfrastructure deploys and configures the rep
 
 ### Example 1: {{ Add title here }}
 ```powershell
-PS C:\> {{ Add code here }}
-
-{{ Add output here }}
+PS C:\> Initialize-AzMigrateReplicationInfrastructure -ProjectName DemoMGP -ResourceGroupName DemoRG -TargetRegion centraluseuap
+-Vmwareagentless
 ```
 
-{{ Add description here }}
-
-### Example 2: {{ Add title here }}
-```powershell
-PS C:\> {{ Add code here }}
-
-{{ Add output here }}
-```
-
-{{ Add description here }}
+Initializes the replication infrastructure
 
 ## PARAMETERS
 
