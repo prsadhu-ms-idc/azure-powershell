@@ -257,6 +257,13 @@ ALIASES
 
 ## RELATED LINKS
 
+---
+external help file:
+Module Name: Az.Migrate
+online version: https://docs.microsoft.com/en-us/powershell/module/az.migrate/new-azmigrateserverreplication
+schema: 2.0.0
+---
+
 # New-AzMigrateServerReplication
 
 ## SYNOPSIS
@@ -264,7 +271,7 @@ Starts replication for the specified server.
 
 ## SYNTAX
 
-### DefaultUser (Default)
+### ByIdDefaultUser (Default)
 ```
 New-AzMigrateServerReplication -DiskType <DiskAccountType> -LicenseType <LicenseType> -OSDiskID <String>
  -TargetNetworkId <String> -TargetResourceGroupId <String> -TargetSubnetName <String>
@@ -274,15 +281,36 @@ New-AzMigrateServerReplication -DiskType <DiskAccountType> -LicenseType <License
  [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
-### PowerUser
+### ByIdPowerUser
 ```
 New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -LicenseType <LicenseType>
  -PerformAutoResync <String> -TargetNetworkId <String> -TargetResourceGroupId <String>
  -TargetSubnetName <String> -TargetSubscriptionId <String> -TargetVMName <String> -TargetVMSize <String>
  -VMwareMachineId <String> [-SubscriptionId <String>] [-TargetAvailabilitySet <String>]
  [-TargetAvailabilityZone <String>] [-TargetBootDiagnosticsStorageAccount <String>]
- [-VMWarerunasaccountID <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
- [<CommonParameters>]
+ [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
+### ByNameDefaultUser
+```
+New-AzMigrateServerReplication -DiskType <DiskAccountType> -LicenseType <LicenseType> -MachineName <String>
+ -OSDiskID <String> -ProjectName <String> -ResourceGroupName <String> -TargetNetworkId <String>
+ -TargetResourceGroupId <String> -TargetSubnetName <String> -TargetSubscriptionId <String>
+ -TargetVMName <String> -TargetVMSize <String> [-PerformAutoResync <String>] [-SubscriptionId <String>]
+ [-TargetAvailabilitySet <String>] [-TargetAvailabilityZone <String>]
+ [-TargetBootDiagnosticsStorageAccount <String>] [-VMWarerunasaccountID <String>] [-DefaultProfile <PSObject>]
+ [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
+### ByNamePowerUser
+```
+New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -LicenseType <LicenseType>
+ -MachineName <String> -PerformAutoResync <String> -ProjectName <String> -ResourceGroupName <String>
+ -TargetNetworkId <String> -TargetResourceGroupId <String> -TargetSubnetName <String>
+ -TargetSubscriptionId <String> -TargetVMName <String> -TargetVMSize <String> [-SubscriptionId <String>]
+ [-TargetAvailabilitySet <String>] [-TargetAvailabilityZone <String>]
+ [-TargetBootDiagnosticsStorageAccount <String>] [-VMWarerunasaccountID <String>] [-DefaultProfile <PSObject>]
+ [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -290,9 +318,13 @@ The New-AzMigrateServerReplication cmdlet starts the replication for a particula
 
 ## EXAMPLES
 
-### Example 1: {{ Add title here }}
+### Example 1: Power User
 ```powershell
-PS C:\> {{ Add code here }}
+PS C:\> [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IVMwareCbtDiskInput[]]$DisksToInclude = @()
+PS C:\> $OSDisk = New-AzMigrateDiskMapping -DiskID '6000C299-343d-7bcd-c05e-a94bd63316dd' -DiskType 'Standard_LRS' -IsOSDisk 'true'
+PS C:\> $DataDisk = New-AzMigrateDiskMapping -DiskID '7000C299-343d-7bcd-c05e-a94bd63316dd' -DiskType 'Standard_LRS' -IsOSDisk 'false'
+PS C:\> $DisksToInclude += $OSDisk
+PS C:\> $DisksToInclude += $DataDisk
 
 {{ Add output here }}
 ```
@@ -346,7 +378,7 @@ To construct, see NOTES section for DISKSTOINCLUDE properties and create a hash 
 
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IVMwareCbtDiskInput[]
-Parameter Sets: PowerUser
+Parameter Sets: ByIdPowerUser, ByNamePowerUser
 Aliases:
 
 Required: True
@@ -361,7 +393,7 @@ Specifies the type of disks to be used for the Azure VM.
 
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Support.DiskAccountType
-Parameter Sets: DefaultUser
+Parameter Sets: ByIdDefaultUser, ByNameDefaultUser
 Aliases:
 
 Required: True
@@ -377,6 +409,21 @@ Specifies if Azure Hybrid benefit is applicable for the source server to be migr
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Support.LicenseType
 Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MachineName
+Specifies the discovered machine name of the discovered server to be migrated.
+
+```yaml
+Type: System.String
+Parameter Sets: ByNameDefaultUser, ByNamePowerUser
 Aliases:
 
 Required: True
@@ -406,7 +453,7 @@ Specifies the Operating System disk for the source server to be migrated.
 
 ```yaml
 Type: System.String
-Parameter Sets: DefaultUser
+Parameter Sets: ByIdDefaultUser, ByNameDefaultUser
 Aliases:
 
 Required: True
@@ -422,6 +469,36 @@ Specifies if replication be auto-repaired in case change tracking is lost for th
 ```yaml
 Type: System.String
 Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProjectName
+Specifies the migrate project name of the discovered server to be migrated.
+
+```yaml
+Type: System.String
+Parameter Sets: ByNameDefaultUser, ByNamePowerUser
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceGroupName
+Specifies the resource group of the discovered server to be migrated.
+
+```yaml
+Type: System.String
+Parameter Sets: ByNameDefaultUser, ByNamePowerUser
 Aliases:
 
 Required: True
@@ -586,7 +663,7 @@ Specifies the machine ID of the discovered server to be migrated.
 
 ```yaml
 Type: System.String
-Parameter Sets: (All)
+Parameter Sets: ByIdDefaultUser, ByIdPowerUser
 Aliases:
 
 Required: True
@@ -601,7 +678,7 @@ Account id.
 
 ```yaml
 Type: System.String
-Parameter Sets: PowerUser
+Parameter Sets: ByNameDefaultUser, ByNamePowerUser
 Aliases:
 
 Required: False
@@ -657,19 +734,10 @@ ALIASES
 
 COMPLEX PARAMETER PROPERTIES
 
-To create the parameters described below, construct a hash table containing the appropriate properties. For information on hash tables, run Get-Help about_Hash_Tables.
-
+To create the parameters described below, please use the New-AzMigrateDiskMapping cmdlet.
 
 DISKSTOINCLUDE <IVMwareCbtDiskInput[]>: Specifies the disks on the source server to be included for replication.
-  - `DiskId <String>`: The disk Id.
-  - `IsOSDisk <String>`: A value indicating whether the disk is the OS disk.
-  - `LogStorageAccountId <String>`: The log storage account ARM Id.
-  - `LogStorageAccountSasSecretName <String>`: The key vault secret name of the log storage account.
-  - `[DiskEncryptionSetId <String>]`: The DiskEncryptionSet ARM Id.
-  - `[DiskType <DiskAccountType?>]`: The disk type.
+
 
 ## RELATED LINKS
-
-
-
 
