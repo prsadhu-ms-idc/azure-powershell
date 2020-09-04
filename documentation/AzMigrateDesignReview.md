@@ -191,7 +191,7 @@ Accept wildcard characters: False
 Specifies the target Azure region for server migrations.
 
 ```yaml
-Type: System.Management.Automation.SwitchParameter
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
