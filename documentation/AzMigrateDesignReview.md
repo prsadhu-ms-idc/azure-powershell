@@ -42,6 +42,12 @@
 - Piping scenarios / how these cmdlets are used with existing cmdlets
 
     - `Yes`
+    - `Get-AzMigrateServerReplication -TargetObjectID $Tid | Remove-AzMigrateServerReplication`
+    - `Get-AzMigrateServerReplication -TargetObjectID $Tid | Start-AzMigrateServerMigration`
+    - `Get-AzMigrateServerReplication -TargetObjectID $Tid | Start-AzMigrateServerTestMigration`
+    - `Get-AzMigrateServerReplication -TargetObjectID $Tid | Start-AzMigrateServerTestMigrationCleaup`
+    - `Get-AzMigrateServerReplication -TargetObjectID $Tid | Restart-AzMigrateServerReplication`
+    - `Get-AzMigrateServerReplication -TargetObjectID $Tid | Get-AzMigrateServerReplication`
 
 - Sample of end-to-end usage
 
