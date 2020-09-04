@@ -1,40 +1,47 @@
-Azure Migrate new cmdlets to support VMwareCbt Migration
-
 ## Guidelines
 
 - Do your cmdlets comply with the design guidelines outlined in the [PowerShell Design Guidelines document](https://github.com/Azure/azure-powershell/tree/master/documentation/development-docs/design-guidelines)?
 
-    - `{ RESPONSE }`
+    - ` Yes `
 
 ## Service Release Details
 
 - Is this an Embargoed Preview, A Public Preview, or a General Release?
 
-    - `{ TYPE OF SERVICE HERE }`
+    - ` Public Preview `
 
 - What is the expected service release date?
 
-    - `{ EXPECTED RELEASE DATE HERE }`
+    - `September 10 2020`
 
 ## Contact Information
 
 - Main developer contacts (emails + github aliases)
 
-    - `{ DEVELOPER CONTACT(S) HERE }`
+    - `prachetos.sadhukhan@microsoft.com(prsadhu-ms-idc),Kunal.Chaturvedi@microsoft.com(kuchatur-ms)`
 
 - PM contact (email + github alias) 
 
-    - `{ PM CONTACT(S) HERE }`
+    - `rahugup@microsoft.com`
 
 - Other people who should attend a design review (email)
 
-    - `{ ADDITIONAL CONTACT(S) HERE }`
+    - `lshai@microsoft.com,krprasa@microsoft.com`
 
 ## High Level Scenarios
 
 - Describe how your feature is intended to be used by customers.
 
-    - `{ DESCRIPTION OF FEATURE HERE } `
+    - `Azure Migrate PowerShell cmdlets for the VMware to Azure scenario will enable IT Pro administrators to automate their migration factories and make it easy to perform repetitive migration activities (as most of the migration activities are done in stages). It will also enable at scale automation support for customers (currently limited due to portal constraints), a repetitive ask from our customers.  
+
+The focus will be on allowing end to end scenario enablement for VMware to Azure scenario by giving more power to the user without exposing the additional complexity inherent in Azure Migrate’s migration architecture.  
+
+1. Enable IT Pros to achieve to automate VMware to Azure agentless migration scenario 
+2. Will allow scripting of Azure Migrate migration operations for scale deployments 
+3. Equip power users to unleash Azure Migrate’s full potential through simplified customization 
+4. Ensure future extensibility in accordance with Azure Migrate migration roadmap 
+
+  `
 
 - Piping scenarios / how these cmdlets are used with existing cmdlets
 
