@@ -72,7 +72,7 @@ The Initialize-AzMigrateReplicationInfrastructure deploys and configures the rep
 
 ## EXAMPLES
 
-### Example 1: {{ Add title here }}
+### Example 1: 
 ```powershell
 PS C:\> Initialize-AzMigrateReplicationInfrastructure -ProjectName DemoMGP -ResourceGroupName DemoRG -TargetRegion centraluseuap
 -Vmwareagentless
