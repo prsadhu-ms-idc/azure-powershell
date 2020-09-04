@@ -2759,7 +2759,7 @@ INPUTOBJECT <IMigrationItem>: Specifies the machine object of the replicating se
 
 ## RELATED LINKS
 
-# Get-AzMigrateReplicationItem
+# Get-AzMigrateServerReplication
 
 ## SYNOPSIS
 Retrieves the details of the replicating server.
@@ -2768,26 +2768,26 @@ Retrieves the details of the replicating server.
 
 ### GetByName (Default)
 ```
-Get-AzMigrateReplicationItem -MachineName <String> -ProjectName <String> -ResourceGroupName <String>
+Get-AzMigrateServerReplication -MachineName <String> -ProjectName <String> -ResourceGroupName <String>
  [-SubscriptionId <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
  [<CommonParameters>]
 ```
 
 ### GetByID
 ```
-Get-AzMigrateReplicationItem -TargetObjectID <String> [-SubscriptionId <String>] [-DefaultProfile <PSObject>]
+Get-AzMigrateServerReplication -TargetObjectID <String> [-SubscriptionId <String>] [-DefaultProfile <PSObject>]
  [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
 ### GetByInputObject
 ```
-Get-AzMigrateReplicationItem -InputObject <IMigrationItem> [-SubscriptionId <String>]
+Get-AzMigrateServerReplication -InputObject <IMigrationItem> [-SubscriptionId <String>]
  [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
 ### ListByName
 ```
-Get-AzMigrateReplicationItem -ProjectName <String> -ResourceGroupName <String> [-SubscriptionId <String>]
+Get-AzMigrateServerReplication -ProjectName <String> -ResourceGroupName <String> [-SubscriptionId <String>]
  [-Filter <String>] [-SkipToken <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
  [<CommonParameters>]
 ```
@@ -2799,7 +2799,7 @@ The Get-AzMigrateServerReplication cmdlet retrieves the object for the replicati
 
 ### Example 1: 
 ```powershell
-PS C:\> Get-AzMigrateReplicationItem -ResourceGroupName 'azmigratepwshtestasr13072020' -ProjectName 'AzMigrateTestProjectPWSH' -MachineName 'bcdr-vcenter-fareast-corp-micro-cfcc5a24-a40e-56b9-a6af-e206c9ca4f93_50063baa-9806-d6d6-7e09-c0ae87309b4f'
+PS C:\> Get-AzMigrateServerReplication -ResourceGroupName 'azmigratepwshtestasr13072020' -ProjectName 'AzMigrateTestProjectPWSH' -MachineName 'bcdr-vcenter-fareast-corp-micro-cfcc5a24-a40e-56b9-a6af-e206c9ca4f93_50063baa-9806-d6d6-7e09-c0ae87309b4f'
 
 Location Name                                                                                                      Type             
 -------- ----                                                                                                      ----                      
