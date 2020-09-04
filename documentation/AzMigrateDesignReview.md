@@ -3426,5 +3426,454 @@ ALIASES
 
 ## RELATED LINKS
 
+# Get-AzMigrateProject
 
+## SYNOPSIS
+Retrieves the details of an Azure Migrate Project.
+
+## SYNTAX
+
+### Get (Default)
+```
+Get-AzMigrateProject -ProjectName <String> -ResourceGroupName <String> [-SubscriptionId <String[]>]
+ [-AcceptLanguage <String>] [-DefaultProfile <PSObject>] [<CommonParameters>]
+```
+### GetViaIdentity
+```
+Get-AzMigrateProject -InputObject <IMigrateIdentity> [-AcceptLanguage <String>] [-DefaultProfile <PSObject>]
+ [<CommonParameters>]
+```
+## DESCRIPTION
+The Get-AzMigrateProject cmdlet retrieves the details of an Azure Migrate project.
+
+## EXAMPLES
+
+### Example 1: 
+```powershell
+PS C:\> Get-AzMigrateProject -ProjectName <String> -ResourceGroupName <String>
+
+ Location Name        Type             
+ -------- ----        ----                      
+ westus2  migrateTest Microsoft.Recov… 
+
+```
+
+## PARAMETERS
+
+### -AcceptLanguage
+Standard request header.
+Used by service to respond to client in appropriate language.
+
+```yaml
+Type: System.String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -DefaultProfile
+The credentials, account, tenant, and subscription used for communication with Azure.
+
+```yaml
+Type: System.Management.Automation.PSObject
+Parameter Sets: (All)
+Aliases: AzureRMContext, AzureCredential
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -InputObject
+Identity Parameter
+To construct, see NOTES section for INPUTOBJECT properties and create a hash table.
+
+```yaml
+Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.IMigrateIdentity
+Parameter Sets: GetViaIdentity
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -Name
+Name of the Azure Migrate project.
+
+```yaml
+Type: System.String
+Parameter Sets: Get
+Aliases: ProjectName
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -ResourceGroupName
+Name of the Azure Resource Group that project is part of.
+
+```yaml
+Type: System.String
+Parameter Sets: Get, List1
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -SubscriptionId
+Azure Subscription Id in which project was created.
+
+```yaml
+Type: System.String[]
+Parameter Sets: Get, List, List1
+Aliases:
+
+Required: False
+Position: Named
+Default value: (Get-AzContext).Subscription.Id
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.IMigrateIdentity
+
+## OUTPUTS
+
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20191001.IProject
+
+## ALIASES
+
+## NOTES
+
+### COMPLEX PARAMETER PROPERTIES
+To create the parameters described below, construct a hash table containing the appropriate properties. For information on hash tables, run Get-Help about_Hash_Tables.
+
+#### INPUTOBJECT <IMigrateIdentity>: Identity Parameter
+  - `[AccountName <String>]`: Run as account ARM name.
+  - `[AssessedMachineName <String>]`: Unique name of an assessed machine evaluated as part of an assessment.
+  - `[AssessmentName <String>]`: Unique name of an assessment within a project.
+  - `[AssessmentOptionsName <String>]`: Name of the assessment options. The only name accepted in default.
+  - `[ClusterName <String>]`: Cluster ARM name.
+  - `[GroupName <String>]`: Unique name of a group within a project.
+  - `[HostName <String>]`: Host ARM name.
+  - `[HyperVCollectorName <String>]`: Unique name of a Hyper-V collector within a project.
+  - `[Id <String>]`: Resource identity path
+  - `[JobName <String>]`: Job ARM name.
+  - `[MachineName <String>]`: Machine ARM name.
+  - `[OperationStatusName <String>]`: Operation status ARM name.
+  - `[ProjectName <String>]`: Name of the Azure Migrate project.
+  - `[ResourceGroupName <String>]`: Name of the Azure Resource Group that project is part of.
+  - `[SiteName <String>]`: Site name.
+  - `[SubscriptionId <String>]`: Azure Subscription Id in which project was created.
+  - `[VMWareCollectorName <String>]`: Unique name of a VMware collector within a project.
+  - `[VcenterName <String>]`: VCenter ARM name.
+
+## RELATED LINKS
+
+# Get-AzMigrateServer
+
+## SYNOPSIS
+Retrives the details of discovered server(s).
+
+## SYNTAX
+
+### List (Default)
+```
+Get-AzMigrateServer -ResourceGroupName <String> -SiteName <String> [-SubscriptionId <String[]>]
+ [-ContinuationToken <String>] [-Filter <String>] [-Top <Int32>] [-TotalRecordCount <Int32>]
+ [-DefaultProfile <PSObject>] [<CommonParameters>]
+```
+
+### Get
+```
+Get-AzMigrateServer -Name <String> -ResourceGroupName <String> -SiteName <String>
+ [-SubscriptionId <String[]>] [-DefaultProfile <PSObject>] [<CommonParameters>]
+```
+
+### GetViaIdentity
+```
+Get-AzMigrateServer -InputObject <IMigrateIdentity> [-DefaultProfile <PSObject>] [<CommonParameters>]
+```
+
+## DESCRIPTION
+The Get-AzMigrateServer cmdlet retrieves the details of a discovered server or a group of discovered servers.
+
+## EXAMPLES
+
+### Example 1: {{ Add title here }}
+```powershell
+PS C:\> Get-AzMigrateServer -Name 'demo1' -ResourceGroupName 'rg1' -SiteName 'site1'
+
+ Location Name                                                                                                      Type             
+ -------- ----                                                                                                      ----                      
+          bcdr-vcenter-fareast-corp-micro-cfcc5a24-a40e-56b9-a6af-e206c9ca4f93_50063baa-9806-d6d6-7e09-c0ae87309b4f Microsoft.Recov… 
+
+```
+
+## PARAMETERS
+
+### -AcceptLanguage
+Standard request header.
+Used by service to respond to client in appropriate language.
+
+```yaml
+Type: System.String
+Parameter Sets: Get1, GetViaIdentity1, List1
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -ContinuationToken
+Optional parameter for continuation token.
+
+```yaml
+Type: System.String
+Parameter Sets: List
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -DefaultProfile
+The credentials, account, tenant, and subscription used for communication with Azure.
+
+```yaml
+Type: System.Management.Automation.PSObject
+Parameter Sets: (All)
+Aliases: AzureRMContext, AzureCredential
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -Filter
+.
+
+```yaml
+Type: System.String
+Parameter Sets: List
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -InputObject
+Identity Parameter
+To construct, see NOTES section for INPUTOBJECT properties and create a hash table.
+
+```yaml
+Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.IMigrateIdentity
+Parameter Sets: GetViaIdentity, GetViaIdentity1
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -Name
+Machine ARM name.
+
+```yaml
+Type: System.String
+Parameter Sets: Get, Get1
+Aliases: MachineName
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -ProjectName
+Name of the Azure Migrate project.
+
+```yaml
+Type: System.String
+Parameter Sets: Get1, List1
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -ResourceGroupName
+The name of the resource group.
+The name is case insensitive.
+
+```yaml
+Type: System.String
+Parameter Sets: Get, Get1, List, List1
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -SiteName
+Site name.
+
+```yaml
+Type: System.String
+Parameter Sets: Get, List
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -SubscriptionId
+The ID of the target subscription.
+
+```yaml
+Type: System.String[]
+Parameter Sets: Get, Get1, List, List1
+Aliases:
+
+Required: False
+Position: Named
+Default value: (Get-AzContext).Subscription.Id
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -Top
+.
+
+```yaml
+Type: System.Int32
+Parameter Sets: List
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### -TotalRecordCount
+Total count of machines in the given site.
+
+```yaml
+Type: System.Int32
+Parameter Sets: List
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+Dynamic: False
+```
+
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
+
+## INPUTS
+
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.IMigrateIdentity
+
+## OUTPUTS
+
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20191001.IMachine
+
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.ApiV1.IVMwareMachine
+
+## ALIASES
+
+## NOTES
+
+### COMPLEX PARAMETER PROPERTIES
+To create the parameters described below, construct a hash table containing the appropriate properties. For information on hash tables, run Get-Help about_Hash_Tables.
+
+#### INPUTOBJECT <IMigrateIdentity>: Identity Parameter
+  - `[AccountName <String>]`: Run as account ARM name.
+  - `[AssessedMachineName <String>]`: Unique name of an assessed machine evaluated as part of an assessment.
+  - `[AssessmentName <String>]`: Unique name of an assessment within a project.
+  - `[AssessmentOptionsName <String>]`: Name of the assessment options. The only name accepted in default.
+  - `[ClusterName <String>]`: Cluster ARM name.
+  - `[GroupName <String>]`: Unique name of a group within a project.
+  - `[HostName <String>]`: Host ARM name.
+  - `[HyperVCollectorName <String>]`: Unique name of a Hyper-V collector within a project.
+  - `[Id <String>]`: Resource identity path
+  - `[JobName <String>]`: Job ARM name.
+  - `[MachineName <String>]`: Machine ARM name.
+  - `[OperationStatusName <String>]`: Operation status ARM name.
+  - `[ProjectName <String>]`: Name of the Azure Migrate project.
+  - `[ResourceGroupName <String>]`: Name of the Azure Resource Group that project is part of.
+  - `[SiteName <String>]`: Site name.
+  - `[SubscriptionId <String>]`: Azure Subscription Id in which project was created.
+  - `[VMWareCollectorName <String>]`: Unique name of a VMware collector within a project.
+  - `[VcenterName <String>]`: VCenter ARM name.
+
+## RELATED LINKS
 
