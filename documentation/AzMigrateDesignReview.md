@@ -1698,13 +1698,6 @@ INPUTOBJECT <IMigrationItem>: Specifies the machine object of the replicating se
 
 ## RELATED LINKS
 
----
-external help file:
-Module Name: Az.Migrate
-online version: https://docs.microsoft.com/en-us/powershell/module/az.migrate/remove-azmigrateserverreplication
-schema: 2.0.0
----
-
 # Remove-AzMigrateServerReplication
 
 ## SYNOPSIS
