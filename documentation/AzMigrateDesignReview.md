@@ -2626,6 +2626,13 @@ Get-AzMigrateServerReplication -ProjectName <String> -ResourceGroupName <String>
  [<CommonParameters>]
 ```
 
+### ListById
+```
+Get-AzMigrateServerReplication -ProjectId <String> -ResourceGroupId <String> [-SubscriptionId <String>]
+ [-Filter <String>] [-SkipToken <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
+ [<CommonParameters>]
+```
+
 ## DESCRIPTION
 The Get-AzMigrateServerReplication cmdlet retrieves the object for the replicating server.
 
@@ -2734,6 +2741,20 @@ Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+### -ProjectId
+Specifies the Azure Migrate project  in the current subscription.
+
+```yaml
+Type: System.String
+Parameter Sets: ListById
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -ProjectName
 Specifies the Azure Migrate project  in the current subscription.
@@ -2741,6 +2762,21 @@ Specifies the Azure Migrate project  in the current subscription.
 ```yaml
 Type: System.String
 Parameter Sets: GetByName, ListByName
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceGroupId
+Specifies the Resource Group of the Azure Migrate Project in the current subscription.
+
+```yaml
+Type: System.String
+Parameter Sets: ListById
 Aliases:
 
 Required: True
@@ -2894,6 +2930,20 @@ Get-AzmigrateJob -InputObject <IJob> [-SubscriptionId <String>] [-DefaultProfile
  [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
+### ListByName
+```
+Get-AzMigrateJob  -ProjectName <String> -ResourceGroupName <String>
+ [-SubscriptionId <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
+ [<CommonParameters>]
+```
+
+### ListById
+```
+Get-AzMigrateJob  -ProjecId <String> -ResourceGroupId <String>
+ [-SubscriptionId <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
+ [<CommonParameters>]
+```
+
 ## DESCRIPTION
 The Get-AzMigrateJob cmdlet retrives the status of an Azure Migrate job.
 
@@ -3001,12 +3051,42 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ProjectId
+The id of the migrate project.
+
+```yaml
+Type: System.String
+Parameter Sets: ListById
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ProjectName
 The name of the migrate project.
 
 ```yaml
 Type: System.String
-Parameter Sets: GetByName
+Parameter Sets: GetByName, ListByName
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceGroupId
+The id of the resource group where the recovery services vault is present.
+
+```yaml
+Type: System.String
+Parameter Sets: GetByName, ListByID
 Aliases:
 
 Required: True
