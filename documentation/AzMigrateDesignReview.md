@@ -337,7 +337,7 @@ Starts replication for the specified server.
 New-AzMigrateServerReplication -DiskType <DiskAccountType> -LicenseType <LicenseType> -MachineName <String>
  -OSDiskID <String> -ProjectName <String> -ResourceGroupName <String> -TargetNetworkId <String>
  -TargetResourceGroupId <String> -TargetSubnetName <String> -TargetSubscriptionId <String>
- -TargetVMName <String> -TargetVMSize <String> [-PerformAutoResync <String>] [-SubscriptionId <String>]
+ -TargetVMName <String> -TargetVMSize <String> [-DiskEncryptionSetID <String>] [-PerformAutoResync <String>] [-SubscriptionId <String>]
  [-TargetAvailabilitySet <String>] [-TargetAvailabilityZone <String>]
  [-TargetBootDiagnosticsStorageAccount <String>] [-VMWarerunasaccountID <String>] [-DefaultProfile <PSObject>]
  [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
@@ -348,7 +348,7 @@ New-AzMigrateServerReplication -DiskType <DiskAccountType> -LicenseType <License
 New-AzMigrateServerReplication -DiskType <DiskAccountType> -LicenseType <LicenseType> -OSDiskID <String>
  -TargetNetworkId <String> -TargetResourceGroupId <String> -TargetSubnetName <String>
  -TargetSubscriptionId <String> -TargetVMName <String> -TargetVMSize <String> -VMwareMachineId <String>
- [-PerformAutoResync <String>] [-SubscriptionId <String>] [-TargetAvailabilitySet <String>]
+ [-DiskEncryptionSetID <String>] [-PerformAutoResync <String>] [-SubscriptionId <String>] [-TargetAvailabilitySet <String>]
  [-TargetAvailabilityZone <String>] [-TargetBootDiagnosticsStorageAccount <String>]
  [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
@@ -366,6 +366,27 @@ New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -LicenseT
 ### ByNamePowerUser
 ```
 New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -LicenseType <LicenseType>
+ -MachineName <String> -PerformAutoResync <String> -ProjectName <String> -ResourceGroupName <String>
+ -TargetNetworkId <String> -TargetResourceGroupId <String> -TargetSubnetName <String>
+ -TargetSubscriptionId <String> -TargetVMName <String> -TargetVMSize <String> [-SubscriptionId <String>]
+ [-TargetAvailabilitySet <String>] [-TargetAvailabilityZone <String>]
+ [-TargetBootDiagnosticsStorageAccount <String>] [-VMWarerunasaccountID <String>] [-DefaultProfile <PSObject>]
+ [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
+### ByInputObjectDefaultUser
+```
+New-AzMigrateServerReplication -DiskType <DiskAccountType> -InputObject<IVMwareMachine> -LicenseType <LicenseType> -OSDiskID <String>
+ -TargetNetworkId <String> -TargetResourceGroupId <String> -TargetSubnetName <String>
+ -TargetSubscriptionId <String> -TargetVMName <String> -TargetVMSize <String> 
+ [-DiskEncryptionSetID <String>] [-PerformAutoResync <String>] [-SubscriptionId <String>] [-TargetAvailabilitySet <String>]
+ [-TargetAvailabilityZone <String>] [-TargetBootDiagnosticsStorageAccount <String>]
+ [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
+### ByInputObjectPowerUser
+```
+New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -InputObject<IVMwareMachine> -LicenseType <LicenseType>
  -MachineName <String> -PerformAutoResync <String> -ProjectName <String> -ResourceGroupName <String>
  -TargetNetworkId <String> -TargetResourceGroupId <String> -TargetSubnetName <String>
  -TargetSubscriptionId <String> -TargetVMName <String> -TargetVMSize <String> [-SubscriptionId <String>]
@@ -442,6 +463,20 @@ Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
+### -DiskEncryptionSetID
+Specifies the encryption set ID of the disk attached to the discovered server to be migrated.
+
+```yaml
+Type: System.String
+Parameter Sets: ByIdDefaultUser, ByNameDefaultUser, ByInputObjectDefaultUser
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -DisksToInclude
 Specifies the disks on the source server to be included for replication.
@@ -465,6 +500,21 @@ Specifies the type of disks to be used for the Azure VM.
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Support.DiskAccountType
 Parameter Sets: ByIdDefaultUser, ByNameDefaultUser
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -InputObject
+pecifies the discovered VM object. To construct, see NOTES section for INPUTOBJECT properties and create a hash table.
+
+```yaml
+Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Support.DiskAccountType
+Parameter Sets: ByInputObjectDefaultUser, BynputObjectDefaultUser
 Aliases:
 
 Required: True
