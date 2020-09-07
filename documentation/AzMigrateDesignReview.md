@@ -61,9 +61,24 @@ Initializes the replication infrastructure.
 
 ## SYNTAX
 
+### ByName (Default)
 ```
 Initialize-AzMigrateReplicationInfrastructure -ProjectName <String> -ResourceGroupName <String> -TargetRegion
  <String> -Vmwareagentless [-SubscriptionId <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-PassThru]
+ [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
+### ByInputObject
+```
+Initialize-AzMigrateReplicationInfrastructure -InputObject <IProject> -TargetRegion <String>
+-Vmwareagentless [-SubscriptionId <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-PassThru]
+ [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
+### ById
+```
+Initialize-AzMigrateReplicationInfrastructure -ResourceGroupID <String> -ProjectID <String> -TargetRegion <String>
+-Vmwareagentless [-SubscriptionId <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-PassThru]
  [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
@@ -112,6 +127,22 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -InputObject
+Specifies the project object.
+To construct, see NOTES section for INPUTOBJECT properties and create a hash table.
+
+```yaml
+Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20191001.IProject
+Parameter Sets: ByInputObject
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -NoWait
 Run the command asynchronously
 
@@ -147,7 +178,22 @@ Specifies the name of the Azure Migrate project to be used for server migration.
 
 ```yaml
 Type: System.String
-Parameter Sets: (All)
+Parameter Sets: ByName
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProjectId
+Specifies the name of the Azure Migrate project to be used for server migration.
+
+```yaml
+Type: System.String
+Parameter Sets: ById
 Aliases:
 
 Required: True
@@ -162,7 +208,22 @@ Specifies the Resource Group of the Azure Migrate Project in the current subscri
 
 ```yaml
 Type: System.String
-Parameter Sets: (All)
+Parameter Sets: ByName
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceGroupId
+Specifies the Resource Group of the Azure Migrate Project in the current subscription.
+
+```yaml
+Type: System.String
+Parameter Sets: ById
 Aliases:
 
 Required: True
@@ -252,6 +313,7 @@ Accept wildcard characters: False
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
+Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20191001.IProject
 
 ## OUTPUTS
 
