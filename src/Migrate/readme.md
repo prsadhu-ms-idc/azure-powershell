@@ -17,7 +17,7 @@ This directory contains the PowerShell module for the Migrate service.
 This module was primarily generated via [AutoRest](https://github.com/Azure/autorest) using the [PowerShell](https://github.com/Azure/autorest.powershell) extension.
 
 ## Module Requirements
-- [Az.Accounts module](https://www.powershellgallery.com/packages/Az.Accounts/), version 1.7.4 or greater
+- [Az.Accounts module](https://www.powershellgallery.com/packages/Az.Accounts/), version 1.8.1 or greater
 
 ## Authentication
 AutoRest does not generate authentication code for the module. Authentication is handled via Az.Accounts by altering the HTTP payload before it is sent.
@@ -50,16 +50,17 @@ In this directory, run AutoRest:
 require:
   - $(this-folder)/../readme.azure.noprofile.md
 input-file:
-  - $(repo)/specification/migrate/resource-manager/Microsoft.Migrate/stable/2019-10-01/migrate.json
+  # - $(repo)/specification/migrate/resource-manager/Microsoft.Migrate/stable/2019-10-01/migrate.json
   - $(repo)/specification/migrate/resource-manager/Microsoft.OffAzure/stable/2020-01-01/migrate.json
+  # - $(repo)/specification/migrateprojects/resource-manager/Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
 module-version: 0.1.0
 title: Migrate 
 subject-prefix: 'Migrate'
 
 directive:
-  - from: Microsoft.Migrate/stable/2019-10-01/migrate.json
-    where: $.paths..operationId
-    transform: return $.replace(/^Project_AssessmentOptions$/g, "Project_GetAssessmentOptions")
+  # - from: Microsoft.Migrate/stable/2019-10-01/migrate.json
+  #   where: $.paths..operationId
+  #   transform: return $.replace(/^Project_AssessmentOptions$/g, "Project_GetAssessmentOptions")
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where: $.paths..operationId
     transform: return $.replace(/^(.*)_GetAll(.*)$/g, "$1_List")
@@ -74,12 +75,27 @@ directive:
     transform: return $.replace(/^(.*)_Patch(.*)$/g, "$1_Update")
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where: $.paths..operationId
-    transform: return $.replace(/^(.*)_Refresh(.*)$)$/g, "$1_Refresh")
+    transform: return $.replace(/^(.*)_Refresh(.*)$/g, "$1_Refresh")
+  # Remove cmdlets not in scope.
+  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+    where:
+      verb: New$|Set$|Update$|Remove$|Start$|Stop$
+    remove: true
+  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+    where:
+      subject: ^HyperV
+    remove: true
+  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+    where:
+      subject: ^Job|^VCenter|^VMwareOperationsStatus
+    remove: true
+  # Rename verbs to friendly names.
   - where:
       verb: Set$
       subject: HyperV(Cluster|Host)$|VCenter$
     set:
       verb: Update
+  # Hide cmdlets not to be visible to user.
   - where:
       verb: Set$
       subject: (HyperV)?Site$

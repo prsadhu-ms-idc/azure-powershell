@@ -25,27 +25,9 @@ Get-AzMigrateMachine -Name <String> -ResourceGroupName <String> -SiteName <Strin
  [-SubscriptionId <String[]>] [-DefaultProfile <PSObject>] [<CommonParameters>]
 ```
 
-### Get1
-```
-Get-AzMigrateMachine -Name <String> -ProjectName <String> -ResourceGroupName <String>
- [-SubscriptionId <String[]>] [-AcceptLanguage <String>] [-DefaultProfile <PSObject>] [<CommonParameters>]
-```
-
 ### GetViaIdentity
 ```
 Get-AzMigrateMachine -InputObject <IMigrateIdentity> [-DefaultProfile <PSObject>] [<CommonParameters>]
-```
-
-### GetViaIdentity1
-```
-Get-AzMigrateMachine -InputObject <IMigrateIdentity> [-AcceptLanguage <String>] [-DefaultProfile <PSObject>]
- [<CommonParameters>]
-```
-
-### List1
-```
-Get-AzMigrateMachine -ProjectName <String> -ResourceGroupName <String> [-SubscriptionId <String[]>]
- [-AcceptLanguage <String>] [-DefaultProfile <PSObject>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -73,23 +55,6 @@ PS C:\> {{ Add code here }}
 
 ## PARAMETERS
 
-### -AcceptLanguage
-Standard request header.
-Used by service to respond to client in appropriate language.
-
-```yaml
-Type: System.String
-Parameter Sets: Get1, GetViaIdentity1, List1
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-Dynamic: False
-```
-
 ### -ContinuationToken
 Optional parameter for continuation token.
 
@@ -103,7 +68,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -DefaultProfile
@@ -119,7 +83,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -Filter
@@ -135,7 +98,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -InputObject
@@ -144,7 +106,7 @@ To construct, see NOTES section for INPUTOBJECT properties and create a hash tab
 
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.IMigrateIdentity
-Parameter Sets: GetViaIdentity, GetViaIdentity1
+Parameter Sets: GetViaIdentity
 Aliases:
 
 Required: True
@@ -152,7 +114,6 @@ Position: Named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -Name
@@ -160,7 +121,7 @@ Machine ARM name.
 
 ```yaml
 Type: System.String
-Parameter Sets: Get, Get1
+Parameter Sets: Get
 Aliases: MachineName
 
 Required: True
@@ -168,23 +129,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
-```
-
-### -ProjectName
-Name of the Azure Migrate project.
-
-```yaml
-Type: System.String
-Parameter Sets: Get1, List1
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -ResourceGroupName
@@ -193,7 +137,7 @@ The name is case insensitive.
 
 ```yaml
 Type: System.String
-Parameter Sets: Get, Get1, List, List1
+Parameter Sets: Get, List
 Aliases:
 
 Required: True
@@ -201,7 +145,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -SiteName
@@ -217,7 +160,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -SubscriptionId
@@ -225,7 +167,7 @@ The ID of the target subscription.
 
 ```yaml
 Type: System.String[]
-Parameter Sets: Get, Get1, List, List1
+Parameter Sets: Get, List
 Aliases:
 
 Required: False
@@ -233,7 +175,6 @@ Position: Named
 Default value: (Get-AzContext).Subscription.Id
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -Top
@@ -249,7 +190,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -TotalRecordCount
@@ -265,7 +205,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### CommonParameters
@@ -277,35 +216,28 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20191001.IMachine
-
-### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.ApiV1.IVMwareMachine
-
-## ALIASES
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api202001.IVMwareMachine
 
 ## NOTES
 
-### COMPLEX PARAMETER PROPERTIES
+ALIASES
+
+COMPLEX PARAMETER PROPERTIES
+
 To create the parameters described below, construct a hash table containing the appropriate properties. For information on hash tables, run Get-Help about_Hash_Tables.
 
-#### INPUTOBJECT <IMigrateIdentity>: Identity Parameter
+
+INPUTOBJECT <IMigrateIdentity>: Identity Parameter
   - `[AccountName <String>]`: Run as account ARM name.
-  - `[AssessedMachineName <String>]`: Unique name of an assessed machine evaluated as part of an assessment.
-  - `[AssessmentName <String>]`: Unique name of an assessment within a project.
-  - `[AssessmentOptionsName <String>]`: Name of the assessment options. The only name accepted in default.
   - `[ClusterName <String>]`: Cluster ARM name.
-  - `[GroupName <String>]`: Unique name of a group within a project.
   - `[HostName <String>]`: Host ARM name.
-  - `[HyperVCollectorName <String>]`: Unique name of a Hyper-V collector within a project.
   - `[Id <String>]`: Resource identity path
   - `[JobName <String>]`: Job ARM name.
   - `[MachineName <String>]`: Machine ARM name.
   - `[OperationStatusName <String>]`: Operation status ARM name.
-  - `[ProjectName <String>]`: Name of the Azure Migrate project.
-  - `[ResourceGroupName <String>]`: Name of the Azure Resource Group that project is part of.
+  - `[ResourceGroupName <String>]`: The name of the resource group. The name is case insensitive.
   - `[SiteName <String>]`: Site name.
-  - `[SubscriptionId <String>]`: Azure Subscription Id in which project was created.
-  - `[VMWareCollectorName <String>]`: Unique name of a VMware collector within a project.
+  - `[SubscriptionId <String>]`: The ID of the target subscription.
   - `[VcenterName <String>]`: VCenter ARM name.
 
 ## RELATED LINKS

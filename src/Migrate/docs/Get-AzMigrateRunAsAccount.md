@@ -67,7 +67,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -DefaultProfile
@@ -83,7 +82,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -InputObject
@@ -100,7 +98,6 @@ Position: Named
 Default value: None
 Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -ResourceGroupName
@@ -117,7 +114,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -SiteName
@@ -133,7 +129,6 @@ Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### -SubscriptionId
@@ -149,7 +144,6 @@ Position: Named
 Default value: (Get-AzContext).Subscription.Id
 Accept pipeline input: False
 Accept wildcard characters: False
-Dynamic: False
 ```
 
 ### CommonParameters
@@ -161,33 +155,28 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.ApiV1.IVMwareRunAsAccount
-
-## ALIASES
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api202001.IVMwareRunAsAccount
 
 ## NOTES
 
-### COMPLEX PARAMETER PROPERTIES
+ALIASES
+
+COMPLEX PARAMETER PROPERTIES
+
 To create the parameters described below, construct a hash table containing the appropriate properties. For information on hash tables, run Get-Help about_Hash_Tables.
 
-#### INPUTOBJECT <IMigrateIdentity>: Identity Parameter
+
+INPUTOBJECT <IMigrateIdentity>: Identity Parameter
   - `[AccountName <String>]`: Run as account ARM name.
-  - `[AssessedMachineName <String>]`: Unique name of an assessed machine evaluated as part of an assessment.
-  - `[AssessmentName <String>]`: Unique name of an assessment within a project.
-  - `[AssessmentOptionsName <String>]`: Name of the assessment options. The only name accepted in default.
   - `[ClusterName <String>]`: Cluster ARM name.
-  - `[GroupName <String>]`: Unique name of a group within a project.
   - `[HostName <String>]`: Host ARM name.
-  - `[HyperVCollectorName <String>]`: Unique name of a Hyper-V collector within a project.
   - `[Id <String>]`: Resource identity path
   - `[JobName <String>]`: Job ARM name.
   - `[MachineName <String>]`: Machine ARM name.
   - `[OperationStatusName <String>]`: Operation status ARM name.
-  - `[ProjectName <String>]`: Name of the Azure Migrate project.
-  - `[ResourceGroupName <String>]`: Name of the Azure Resource Group that project is part of.
+  - `[ResourceGroupName <String>]`: The name of the resource group. The name is case insensitive.
   - `[SiteName <String>]`: Site name.
-  - `[SubscriptionId <String>]`: Azure Subscription Id in which project was created.
-  - `[VMWareCollectorName <String>]`: Unique name of a VMware collector within a project.
+  - `[SubscriptionId <String>]`: The ID of the target subscription.
   - `[VcenterName <String>]`: VCenter ARM name.
 
 ## RELATED LINKS
