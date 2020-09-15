@@ -12,6 +12,11 @@ function setupEnv() {
     $env.SubscriptionId = (Get-AzContext).Subscription.Id
     $env.Tenant = (Get-AzContext).Tenant.Id
     # For any resources you created for test, you should add it to $env here.
+	$env.migSubscriptionId = "31be0ff4-c932-4cb3-8efc-efa411d79280"
+	$env.migResourceGroup = "AzMigratePwshTestMig"
+	$env.migProjectName = "AzMigratePwshTestMigProj"
+	$env.migSiteName = 
+
     $envFile = 'env.json'
     if ($TestMode -eq 'live') {
         $envFile = 'localEnv.json'

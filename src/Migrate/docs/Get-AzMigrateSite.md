@@ -207,13 +207,18 @@ To create the parameters described below, construct a hash table containing the 
 INPUTOBJECT <IMigrateIdentity>: Identity Parameter
   - `[AccountName <String>]`: Run as account ARM name.
   - `[ClusterName <String>]`: Cluster ARM name.
+  - `[DatabaseInstanceName <String>]`: Unique name of a database instance in Azure migration hub.
+  - `[DatabaseName <String>]`: Unique name of a database in Azure migration hub.
+  - `[EventName <String>]`: Unique name of an event within a migrate project.
   - `[HostName <String>]`: Host ARM name.
   - `[Id <String>]`: Resource identity path
   - `[JobName <String>]`: Job ARM name.
   - `[MachineName <String>]`: Machine ARM name.
+  - `[MigrateProjectName <String>]`: Name of the Azure Migrate project.
   - `[OperationStatusName <String>]`: Operation status ARM name.
   - `[ResourceGroupName <String>]`: The name of the resource group. The name is case insensitive.
   - `[SiteName <String>]`: Site name.
+  - `[SolutionName <String>]`: Unique name of a migration solution within a migrate project.
   - `[SubscriptionId <String>]`: The ID of the target subscription.
   - `[VcenterName <String>]`: VCenter ARM name.
 

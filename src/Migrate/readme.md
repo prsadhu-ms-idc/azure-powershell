@@ -52,7 +52,7 @@ require:
 input-file:
   # - $(repo)/specification/migrate/resource-manager/Microsoft.Migrate/stable/2019-10-01/migrate.json
   - $(repo)/specification/migrate/resource-manager/Microsoft.OffAzure/stable/2020-01-01/migrate.json
-  # - $(repo)/specification/migrateprojects/resource-manager/Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+  - $(repo)/specification/migrateprojects/resource-manager/Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
 module-version: 0.1.0
 title: Migrate 
 subject-prefix: 'Migrate'
@@ -76,7 +76,16 @@ directive:
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where: $.paths..operationId
     transform: return $.replace(/^(.*)_Refresh(.*)$/g, "$1_Refresh")
-  # Remove cmdlets not in scope.
+  - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+    where: $
+    transform: return $.replace(/IEdm/g, "Iedm")
+  - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+    where: $
+    transform: return $.replace(/IServiceProvider/g, "IserviceProvider")
+  - no-inline:
+    - IedmStructuredType
+    - IedmNavigationProperty
+# Remove cmdlets not in scope.
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where:
       verb: New$|Set$|Update$|Remove$|Start$|Stop$
@@ -88,6 +97,14 @@ directive:
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where:
       subject: ^Job|^VCenter|^VMwareOperationsStatus
+    remove: true
+  - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+    where:
+      verb: Invoke$|Register$
+    remove: true
+  - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+    where:
+      subject: ^Database|^DatabaseInstance|^SolutionConfig|^Event
     remove: true
   # Rename verbs to friendly names.
   - where:

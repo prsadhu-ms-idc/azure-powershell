@@ -1,48 +1,30 @@
 ---
 external help file:
 Module Name: Az.Migrate
-online version: https://docs.microsoft.com/en-us/powershell/module/az.migrate/get-azmigratemachine
+online version: https://docs.microsoft.com/en-us/powershell/module/az.migrate/get-azmigratesolution
 schema: 2.0.0
 ---
 
-# Get-AzMigrateMachine
+# Get-AzMigrateSolution
 
 ## SYNOPSIS
-Method to get machine.
+Gets a solution in the migrate project.
 
 ## SYNTAX
 
-### List (Default)
+### Get (Default)
 ```
-Get-AzMigrateMachine -ResourceGroupName <String> -SiteName <String> [-SubscriptionId <String[]>]
- [-ContinuationToken <String>] [-Filter <String>] [-Top <Int32>] [-TotalRecordCount <Int32>]
- [-DefaultProfile <PSObject>] [<CommonParameters>]
-```
-
-### Get
-```
-Get-AzMigrateMachine -Name <String> -ResourceGroupName <String> -SiteName <String>
- [-SubscriptionId <String[]>] [-DefaultProfile <PSObject>] [<CommonParameters>]
-```
-
-### Get1
-```
-Get-AzMigrateMachine -MigrateProjectName <String> -Name <String> -ResourceGroupName <String>
+Get-AzMigrateSolution -MigrateProjectName <String> -Name <String> -ResourceGroupName <String>
  [-SubscriptionId <String[]>] [-DefaultProfile <PSObject>] [<CommonParameters>]
 ```
 
 ### GetViaIdentity
 ```
-Get-AzMigrateMachine -InputObject <IMigrateIdentity> [-DefaultProfile <PSObject>] [<CommonParameters>]
-```
-
-### GetViaIdentity1
-```
-Get-AzMigrateMachine -InputObject <IMigrateIdentity> [-DefaultProfile <PSObject>] [<CommonParameters>]
+Get-AzMigrateSolution -InputObject <IMigrateIdentity> [-DefaultProfile <PSObject>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Method to get machine.
+Gets a solution in the migrate project.
 
 ## EXAMPLES
 
@@ -66,21 +48,6 @@ PS C:\> {{ Add code here }}
 
 ## PARAMETERS
 
-### -ContinuationToken
-Optional parameter for continuation token.
-
-```yaml
-Type: System.String
-Parameter Sets: List
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -DefaultProfile
 The credentials, account, tenant, and subscription used for communication with Azure.
 
@@ -96,28 +63,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Filter
-.
-
-```yaml
-Type: System.String
-Parameter Sets: List
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -InputObject
 Identity Parameter
 To construct, see NOTES section for INPUTOBJECT properties and create a hash table.
 
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.IMigrateIdentity
-Parameter Sets: GetViaIdentity, GetViaIdentity1
+Parameter Sets: GetViaIdentity
 Aliases:
 
 Required: True
@@ -132,7 +84,7 @@ Name of the Azure Migrate project.
 
 ```yaml
 Type: System.String
-Parameter Sets: Get1
+Parameter Sets: Get
 Aliases:
 
 Required: True
@@ -143,12 +95,12 @@ Accept wildcard characters: False
 ```
 
 ### -Name
-Machine ARM name.
+Unique name of a migration solution within a migrate project.
 
 ```yaml
 Type: System.String
-Parameter Sets: Get, Get1
-Aliases: MachineName
+Parameter Sets: Get
+Aliases: SolutionName
 
 Required: True
 Position: Named
@@ -158,27 +110,11 @@ Accept wildcard characters: False
 ```
 
 ### -ResourceGroupName
-The name of the resource group.
-The name is case insensitive.
+Name of the Azure Resource Group that migrate project is part of.
 
 ```yaml
 Type: System.String
-Parameter Sets: Get, Get1, List
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -SiteName
-Site name.
-
-```yaml
-Type: System.String
-Parameter Sets: Get, List
+Parameter Sets: Get
 Aliases:
 
 Required: True
@@ -189,46 +125,16 @@ Accept wildcard characters: False
 ```
 
 ### -SubscriptionId
-The ID of the target subscription.
+Azure Subscription Id in which migrate project was created.
 
 ```yaml
 Type: System.String[]
-Parameter Sets: Get, Get1, List
+Parameter Sets: Get
 Aliases:
 
 Required: False
 Position: Named
 Default value: (Get-AzContext).Subscription.Id
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Top
-.
-
-```yaml
-Type: System.Int32
-Parameter Sets: List
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -TotalRecordCount
-Total count of machines in the given site.
-
-```yaml
-Type: System.Int32
-Parameter Sets: List
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -242,9 +148,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180901Preview.IMachine
-
-### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api202001.IVMwareMachine
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180901Preview.ISolution
 
 ## NOTES
 

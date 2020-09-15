@@ -11,7 +11,7 @@
   DotNetFrameworkVersion = '4.7.2'
   RequiredAssemblies = './bin/Az.Migrate.private.dll'
   FormatsToProcess = './Az.Migrate.format.ps1xml'
-  FunctionsToExport = 'Get-AzMigrateMachine', 'Get-AzMigrateRunAsAccount', 'Get-AzMigrateSite', '*'
+  FunctionsToExport = 'Get-AzMigrateMachine', 'Get-AzMigrateProject', 'Get-AzMigrateRunAsAccount', 'Get-AzMigrateSite', 'Get-AzMigrateSolution', '*'
   AliasesToExport = '*'
   PrivateData = @{
     PSData = @{

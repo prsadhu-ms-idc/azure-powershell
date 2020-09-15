@@ -14,9 +14,15 @@ Microsoft Azure PowerShell: Migrate cmdlets
 ### [Get-AzMigrateMachine](Get-AzMigrateMachine.md)
 Method to get machine.
 
+### [Get-AzMigrateProject](Get-AzMigrateProject.md)
+Method to get a migrate project.
+
 ### [Get-AzMigrateRunAsAccount](Get-AzMigrateRunAsAccount.md)
 Method to get run as account.
 
 ### [Get-AzMigrateSite](Get-AzMigrateSite.md)
 Method to get a site.
+
+### [Get-AzMigrateSolution](Get-AzMigrateSolution.md)
+Gets a solution in the migrate project.
 
