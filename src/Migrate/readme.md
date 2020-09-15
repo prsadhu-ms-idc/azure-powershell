@@ -82,6 +82,9 @@ directive:
   - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
     where: $
     transform: return $.replace(/IServiceProvider/g, "IserviceProvider")
+  - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+    where: $.paths..operationId
+    transform: return $.replace(/^(.*)_Enumerate(.*)$/g, "$1_List")
   - no-inline:
     - IedmStructuredType
     - IedmNavigationProperty
@@ -104,16 +107,18 @@ directive:
     remove: true
   - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
     where:
-      subject: ^Database|^DatabaseInstance|^SolutionConfig|^Event
+      subject: ^Database|^DatabaseInstance|^SolutionConfig|^Event|^Machine
     remove: true
   # Rename verbs to friendly names.
-  - where:
+  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+    where:
       verb: Set$
       subject: HyperV(Cluster|Host)$|VCenter$
     set:
       verb: Update
   # Hide cmdlets not to be visible to user.
-  - where:
+  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+    where:
       verb: Set$
       subject: (HyperV)?Site$
     hide: true

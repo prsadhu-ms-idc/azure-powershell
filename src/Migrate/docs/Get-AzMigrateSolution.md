@@ -12,7 +12,13 @@ Gets a solution in the migrate project.
 
 ## SYNTAX
 
-### Get (Default)
+### List (Default)
+```
+Get-AzMigrateSolution -MigrateProjectName <String> -ResourceGroupName <String> [-SubscriptionId <String[]>]
+ [-DefaultProfile <PSObject>] [<CommonParameters>]
+```
+
+### Get
 ```
 Get-AzMigrateSolution -MigrateProjectName <String> -Name <String> -ResourceGroupName <String>
  [-SubscriptionId <String[]>] [-DefaultProfile <PSObject>] [<CommonParameters>]
@@ -84,7 +90,7 @@ Name of the Azure Migrate project.
 
 ```yaml
 Type: System.String
-Parameter Sets: Get
+Parameter Sets: Get, List
 Aliases:
 
 Required: True
@@ -114,7 +120,7 @@ Name of the Azure Resource Group that migrate project is part of.
 
 ```yaml
 Type: System.String
-Parameter Sets: Get
+Parameter Sets: Get, List
 Aliases:
 
 Required: True
@@ -129,7 +135,7 @@ Azure Subscription Id in which migrate project was created.
 
 ```yaml
 Type: System.String[]
-Parameter Sets: Get
+Parameter Sets: Get, List
 Aliases:
 
 Required: False
@@ -149,6 +155,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180901Preview.ISolution
+
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180901Preview.ISolutionsCollection
 
 ## NOTES
 

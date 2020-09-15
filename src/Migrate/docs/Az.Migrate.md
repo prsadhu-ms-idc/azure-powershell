@@ -11,9 +11,6 @@ Locale: en-US
 Microsoft Azure PowerShell: Migrate cmdlets
 
 ## Az.Migrate Cmdlets
-### [Get-AzMigrateMachine](Get-AzMigrateMachine.md)
-Method to get machine.
-
 ### [Get-AzMigrateProject](Get-AzMigrateProject.md)
 Method to get a migrate project.
 
