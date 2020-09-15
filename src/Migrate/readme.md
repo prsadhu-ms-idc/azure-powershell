@@ -107,7 +107,7 @@ directive:
     remove: true
   - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
     where:
-      subject: ^Database|^DatabaseInstance|^SolutionConfig|^Event|^Machine
+      subject: ^Database|^DatabaseInstance|^SolutionConfig|^Event
     remove: true
   # Rename verbs to friendly names.
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
