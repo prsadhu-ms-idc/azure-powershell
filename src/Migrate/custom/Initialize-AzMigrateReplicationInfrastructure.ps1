@@ -145,7 +145,7 @@ function Initialize-AzMigrateReplicationInfrastructure {
             # TODO PLEASE FIX BEFORE RELEASE
             Set-PSDebug -Step; foreach ($i in 1..3) {$i}
             if ($Vmwareagentless.IsPresent) {
-                $ParameterSetName = 
+                $ParameterSetName = $PSCmdlet.ParameterSetName
                 # TODO PLEASE FIX BEFORE RELEASE
                 # Get Site name from project name
                 
