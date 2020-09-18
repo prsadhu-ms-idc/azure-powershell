@@ -35,15 +35,6 @@ Gets a solution in the migrate project.
 ### [Initialize-AzMigrateReplicationInfrastructure](Initialize-AzMigrateReplicationInfrastructure.md)
 The Initialize-AzMigrateReplicationInfrastructure deploys and configures the replication infrastructure used for server migration in the Azure Migrate project Resource Group.
 
-### [Mock-AzMigrateGetRunAsAccountId](Mock-AzMigrateGetRunAsAccountId.md)
-Mock
-
-### [Mock-AzMigrateGetSite](Mock-AzMigrateGetSite.md)
-Mock
-
-### [Mock-AzMigrateGetSolution](Mock-AzMigrateGetSolution.md)
-Mock
-
 ### [New-AzMigrateDiskMapping](New-AzMigrateDiskMapping.md)
 The New-AzMigrateDiskMapping cmdlet creates a mapping of the source disk attached to the server to be migrated
 

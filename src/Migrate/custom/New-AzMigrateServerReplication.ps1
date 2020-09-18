@@ -53,8 +53,16 @@ function New-AzMigrateServerReplication {
         # Specifies the discovered machine name of the discovered server to be migrated.
         ${MachineName},
 
+        [Parameter(ParameterSetName='ByInputObjectDefaultUser', Mandatory)]
+        [Parameter(ParameterSetName='ByInputObjectPowerUser', Mandatory)]
+        [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Category('Path')]
+        [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api202001.IVMwareMachine]
+        # Specifies the discovered server to be migrated. The server object can be retrieved using the Get-AzMigrateServer cmdlet.
+        ${InputObject},
+
         [Parameter(ParameterSetName='ByIdPowerUser', Mandatory)]
         [Parameter(ParameterSetName='ByNamePowerUser', Mandatory)]
+        [Parameter(ParameterSetName='ByInputObjectPowerUser', Mandatory)]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Category('Path')]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IVMwareCbtDiskInput[]]
         # Specifies the disks on the source server to be included for replication.
@@ -117,8 +125,10 @@ function New-AzMigrateServerReplication {
 
         [Parameter(ParameterSetName='ByIdDefaultUser')]
         [Parameter(ParameterSetName='ByNameDefaultUser')]
+        [Parameter(ParameterSetName='ByInputObjectDefaultUser')]
         [Parameter(ParameterSetName='ByIdPowerUser', Mandatory)]
         [Parameter(ParameterSetName='ByNamePowerUser', Mandatory)]
+        [Parameter(ParameterSetName='ByInputObjectPowerUser', Mandatory)]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Category('Path')]
         [System.String]
         # Specifies if replication be auto-repaired in case change tracking is lost for the source server under replication.
@@ -144,6 +154,7 @@ function New-AzMigrateServerReplication {
 
         [Parameter(ParameterSetName='ByNameDefaultUser', Mandatory)]
         [Parameter(ParameterSetName='ByIdDefaultUser', Mandatory)]
+        [Parameter(ParameterSetName='ByInputObjectDefaultUser', Mandatory)]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Category('Path')]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Support.DiskAccountType]
         # Specifies the type of disks to be used for the Azure VM.
@@ -151,6 +162,7 @@ function New-AzMigrateServerReplication {
         
         [Parameter(ParameterSetName='ByNameDefaultUser', Mandatory)]
         [Parameter(ParameterSetName='ByIdDefaultUser', Mandatory)]
+        [Parameter(ParameterSetName='ByInputObjectDefaultUser', Mandatory)]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Category('Path')]
         [System.String]
         # Specifies the Operating System disk for the source server to be migrated.
@@ -228,6 +240,7 @@ function New-AzMigrateServerReplication {
           
             Set-PSDebug -Step; foreach ($i in 1..3) {$i}
             $test = $PSBoundParameters
+            
 
             $ParameterSetName = $PSCmdlet.ParameterSetName
             $MachineIdArray = $VmWareMachineId.Split("/")

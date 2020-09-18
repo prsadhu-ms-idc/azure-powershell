@@ -43,6 +43,26 @@ New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -LicenseT
  [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
+### ByInputObjectDefaultUser
+```
+New-AzMigrateServerReplication -DiskType <DiskAccountType> -InputObject <IVMwareMachine>
+ -LicenseType <LicenseType> -OSDiskID <String> -TargetNetworkId <String> -TargetResourceGroupId <String>
+ -TargetSubnetName <String> -TargetSubscriptionId <String> -TargetVMName <String> -TargetVMSize <String>
+ [-PerformAutoResync <String>] [-SubscriptionId <String>] [-TargetAvailabilitySet <String>]
+ [-TargetAvailabilityZone <String>] [-TargetBootDiagnosticsStorageAccount <String>]
+ [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
+### ByInputObjectPowerUser
+```
+New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -InputObject <IVMwareMachine>
+ -LicenseType <LicenseType> -PerformAutoResync <String> -TargetNetworkId <String>
+ -TargetResourceGroupId <String> -TargetSubnetName <String> -TargetSubscriptionId <String>
+ -TargetVMName <String> -TargetVMSize <String> [-SubscriptionId <String>] [-TargetAvailabilitySet <String>]
+ [-TargetAvailabilityZone <String>] [-TargetBootDiagnosticsStorageAccount <String>]
+ [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
 ### ByNamePowerUser
 ```
 New-AzMigrateServerReplication -DisksToInclude <IVMwareCbtDiskInput[]> -LicenseType <LicenseType>
@@ -115,7 +135,7 @@ To construct, see NOTES section for DISKSTOINCLUDE properties and create a hash 
 
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IVMwareCbtDiskInput[]
-Parameter Sets: ByIdPowerUser, ByNamePowerUser
+Parameter Sets: ByIdPowerUser, ByInputObjectPowerUser, ByNamePowerUser
 Aliases:
 
 Required: True
@@ -130,7 +150,24 @@ Specifies the type of disks to be used for the Azure VM.
 
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Support.DiskAccountType
-Parameter Sets: ByIdDefaultUser, ByNameDefaultUser
+Parameter Sets: ByIdDefaultUser, ByInputObjectDefaultUser, ByNameDefaultUser
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -InputObject
+Specifies the discovered server to be migrated.
+The server object can be retrieved using the Get-AzMigrateServer cmdlet.
+To construct, see NOTES section for INPUTOBJECT properties and create a hash table.
+
+```yaml
+Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api202001.IVMwareMachine
+Parameter Sets: ByInputObjectDefaultUser, ByInputObjectPowerUser
 Aliases:
 
 Required: True
@@ -190,7 +227,7 @@ Specifies the Operating System disk for the source server to be migrated.
 
 ```yaml
 Type: System.String
-Parameter Sets: ByIdDefaultUser, ByNameDefaultUser
+Parameter Sets: ByIdDefaultUser, ByInputObjectDefaultUser, ByNameDefaultUser
 Aliases:
 
 Required: True
@@ -481,6 +518,9 @@ DISKSTOINCLUDE <IVMwareCbtDiskInput[]>: Specifies the disks on the source server
   - `LogStorageAccountSasSecretName <String>`: The key vault secret name of the log storage account.
   - `[DiskEncryptionSetId <String>]`: The DiskEncryptionSet ARM Id.
   - `[DiskType <DiskAccountType?>]`: The disk type.
+
+INPUTOBJECT <IVMwareMachine>: Specifies the discovered server to be migrated. The server object can be retrieved using the Get-AzMigrateServer cmdlet.
+  - `[GuestOSDetailOstype <String>]`: Type of the operating system.
 
 ## RELATED LINKS
 

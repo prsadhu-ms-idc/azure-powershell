@@ -31,12 +31,33 @@ Get-AzMigrateJob -InputObject <IJob> [-SubscriptionId <String>] [-DefaultProfile
  [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
+### ListById
+```
+Get-AzMigrateJob -ProjectID <String> -ResourceGroupID <String> [-SubscriptionId <String>] [-Filter <String>]
+ [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
+### ListByName
+```
+Get-AzMigrateJob -ProjectName <String> -ResourceGroupName <String> [-SubscriptionId <String>]
+ [-Filter <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
 ## DESCRIPTION
 The Get-AzMigrateJob cmdlet retrives the status of an Azure Migrate job.
 
 ## EXAMPLES
 
 ### Example 1: {{ Add title here }}
+```powershell
+PS C:\> {{ Add code here }}
+
+{{ Add output here }}
+```
+
+{{ Add description here }}
+
+### Example 2: {{ Add title here }}
 ```powershell
 PS C:\> {{ Add code here }}
 
@@ -69,6 +90,21 @@ The credentials, account, tenant, and subscription used for communication with A
 Type: System.Management.Automation.PSObject
 Parameter Sets: (All)
 Aliases: AzureRMContext, AzureCredential
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Filter
+OData filter options.
+
+```yaml
+Type: System.String
+Parameter Sets: ListById, ListByName
+Aliases:
 
 Required: False
 Position: Named
@@ -138,12 +174,42 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ProjectID
+Specifies the Azure Migrate Project in which servers are replicating.
+
+```yaml
+Type: System.String
+Parameter Sets: ListById
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -ProjectName
 The name of the migrate project.
 
 ```yaml
 Type: System.String
-Parameter Sets: GetByName
+Parameter Sets: GetByName, ListByName
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceGroupID
+Specifies the Resource Group of the Azure Migrate Project in the current subscription.
+
+```yaml
+Type: System.String
+Parameter Sets: ListById
 Aliases:
 
 Required: True
@@ -158,7 +224,7 @@ The name of the resource group where the recovery services vault is present.
 
 ```yaml
 Type: System.String
-Parameter Sets: GetByName
+Parameter Sets: GetByName, ListByName
 Aliases:
 
 Required: True
