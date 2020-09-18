@@ -126,11 +126,11 @@ directive:
       subject: Project$
     set:
       verb: New
-  # - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
-  #   where:
-  #     subject: Machine$
-  #   set:
-  #     Subject: Server
+  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+    where:
+      subject: ^Machine$
+    set:
+      Subject: Server
   # Hide cmdlets not to be visible to user.
   - where:
       verb: New$|Update$

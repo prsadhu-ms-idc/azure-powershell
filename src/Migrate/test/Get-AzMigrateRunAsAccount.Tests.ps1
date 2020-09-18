@@ -12,15 +12,19 @@ while(-not $mockingPath) {
 . ($mockingPath | Select-Object -First 1).FullName
 
 Describe 'Get-AzMigrateRunAsAccount' {
-    It 'List' -skip {
-        { throw [System.NotImplementedException] } | Should -Not -Throw
+    It 'List' {
+        $runAsAccounts = Get-AzMigrateRunAsAccount -ResourceGroupName $env.migResourceGroup -SiteName $env.migSiteName -SubscriptionId $env.migSubscriptionId       
+        $runAsAccounts.Count | Should -BeGreaterOrEqual 1 
     }
 
-    It 'Get' -skip {
-        { throw [System.NotImplementedException] } | Should -Not -Throw
+    It 'Get' {
+        $runAsAccount = Get-AzMigrateRunAsAccount -AccountName $env.migRunAsAccountName -ResourceGroupName $env.migResourceGroup -SiteName $env.migSiteName -SubscriptionId $env.migSubscriptionId       
+        $runAsAccount.Name | Should -Be $env.migRunAsAccountName
     }
 
-    It 'GetViaIdentity' -skip {
-        { throw [System.NotImplementedException] } | Should -Not -Throw
+    It 'GetViaIdentity' {
+        $runAsAccount1 = Get-AzMigrateRunAsAccount -AccountName $env.migRunAsAccountName -ResourceGroupName $env.migResourceGroup -SiteName $env.migSiteName -SubscriptionId $env.migSubscriptionId       
+        $runAsAccount2 = Get-AzMigrateRunAsAccount -InputObject $runAsAccount1
+        $runAsAccount2.Name | Should -Be $env.migRunAsAccountName
     }
 }
