@@ -89,17 +89,22 @@ directive:
     - IedmStructuredType
     - IedmNavigationProperty
 # Remove cmdlets not in scope.
+  # - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+  #   where:
+  #     verb: New$|Set$|Update$|Remove$|Start$|Stop$
+  #   remove: true
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where:
-      verb: New$|Set$|Update$|Remove$|Start$|Stop$
+      verb: Update$|Start$|Stop$
     remove: true
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where:
-      subject: ^HyperV
+      subject: ^HyperV|^Job|^VCenter|^VMwareOperationsStatus
     remove: true
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where:
-      subject: ^Job|^VCenter|^VMwareOperationsStatus
+      verb: New$|Remove$|Set$
+      subject: ^Site
     remove: true
   - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
     where:
@@ -109,19 +114,24 @@ directive:
     where:
       subject: ^Database|^DatabaseInstance|^SolutionConfig|^Event
     remove: true
-  # Rename verbs to friendly names.
-  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+  - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+    where:
+      verb: Set$|Remove$
+      subject: ^Solution
+    remove: true
+  # Rename verbs and subjects to friendly names.
+  - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
     where:
       verb: Set$
-      subject: HyperV(Cluster|Host)$|VCenter$
+      subject: Project$
     set:
-      verb: Update
+      verb: New
+  # - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+  #   where:
+  #     subject: Machine$
+  #   set:
+  #     Subject: Server
   # Hide cmdlets not to be visible to user.
-  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
-    where:
-      verb: Set$
-      subject: (HyperV)?Site$
-    hide: true
   - where:
       verb: New$|Update$
       variant: ^(Update|Create)(?!.*?Expanded)

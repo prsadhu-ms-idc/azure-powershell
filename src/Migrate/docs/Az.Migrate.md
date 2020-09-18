@@ -26,3 +26,10 @@ Method to get a site.
 ### [Get-AzMigrateSolution](Get-AzMigrateSolution.md)
 Gets a solution in the migrate project.
 
+### [New-AzMigrateProject](New-AzMigrateProject.md)
+Method to create or update a migrate project.
+
+### [Remove-AzMigrateProject](Remove-AzMigrateProject.md)
+Delete the migrate project.
+Deleting non-existent project is a no-operation.
+
