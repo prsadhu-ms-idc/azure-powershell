@@ -40,6 +40,7 @@ function Initialize-AzMigrateReplicationInfrastructure {
         [Parameter(ParameterSetName='ByInputObjectVMwareCbt', Mandatory)]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Category('Path')]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180901Preview.IMigrateProject]
+
         # Specifies the Azure Migrate project for server migration. The project object can be retrieved using the Get-AzMigrateProject cmdlet.
         ${InputObject},
 
