@@ -50,17 +50,16 @@ In this directory, run AutoRest:
 require:
   - $(this-folder)/../readme.azure.noprofile.md
 input-file:
-  # - $(repo)/specification/migrate/resource-manager/Microsoft.Migrate/stable/2019-10-01/migrate.json
-  - $(repo)/specification/migrate/resource-manager/Microsoft.OffAzure/stable/2020-01-01/migrate.json
-  - $(repo)/specification/migrateprojects/resource-manager/Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+    - $(repo)/specification/migrate/resource-manager/Microsoft.OffAzure/stable/2020-01-01/migrate.json
+    - $(repo)/specification/migrateprojects/resource-manager/Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+    - $(repo)/specification/recoveryservicessiterecovery/resource-manager/Microsoft.RecoveryServices/stable/2018-01-10/service.json
+
 module-version: 0.1.0
 title: Migrate 
 subject-prefix: 'Migrate'
 
 directive:
-  # - from: Microsoft.Migrate/stable/2019-10-01/migrate.json
-  #   where: $.paths..operationId
-  #   transform: return $.replace(/^Project_AssessmentOptions$/g, "Project_GetAssessmentOptions")
+  # Correct some swagger operationIds
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where: $.paths..operationId
     transform: return $.replace(/^(.*)_GetAll(.*)$/g, "$1_List")
@@ -85,26 +84,70 @@ directive:
   - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
     where: $.paths..operationId
     transform: return $.replace(/^(.*)_Enumerate(.*)$/g, "$1_List")
+  # Correct some generated models
   - no-inline:
+    - TestMigrateProviderSpecificInput
+    - MigrationProviderSpecificSettings
+    - MigrateProviderSpecificInput
+    - ResyncProviderSpecificInput
+    - EnableMigrationProviderSpecificInput
+    - UpdateMigrationItemProviderSpecificInput
     - IedmStructuredType
     - IedmNavigationProperty
-# Remove cmdlets not in scope.
-  # - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
-  #   where:
-  #     verb: New$|Set$|Update$|Remove$|Start$|Stop$
-  #   remove: true
-  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+  # Remove variants not in scope
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
     where:
-      verb: Update$|Start$|Stop$
+      verb: Test$
+      subject: ^ReplicationMigrationItemMigrate
+      variant: ^TestViaIdentity$|^TestViaIdentityExpanded$|^Test$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Get$
+      subject: ReplicationFabric$|ReplicationPolicy$|ReplicationProtectionContainer$|ReplicationMigrationItem$|ReplicationJob$
+      variant: ^GetViaIdentity$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Remove$
+      subject: ^ReplicationMigrationItem
+      variant: ^DeleteViaIdentity$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Move$
+      subject: ^ReplicationMigrationItem
+      variant: ^MigrateViaIdentityExpanded$|^Migrate$|^MigrateViaIdentity$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Invoke$
+      subject: ^ResyncReplicationMigrationItem
+      variant: ^ResyncViaIdentityExpanded$|^ResyncViaIdentity$|^Resync$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: New$
+      subject: ^ReplicationMigrationItem
+      variant: ^CreateViaIdentity$|^CreateViaIdentityExpanded$|^Create$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Update$
+      subject: ^ReplicationMigrationItem
+      variant: ^UpdateViaIdentityExpanded$|^UpdateViaIdentity$|^Update$
     remove: true
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where:
-      subject: ^HyperV|^Job|^VCenter|^VMwareOperationsStatus
+      verb: New$|Set$|Update$|Remove$|Start$|Stop$
     remove: true
   - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where:
-      verb: New$|Remove$|Set$
-      subject: ^Site
+      subject: ^HyperV
+    remove: true
+  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
+    where:
+      subject: ^Job|^VCenter|^VMwareOperationsStatus
     remove: true
   - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
     where:
@@ -119,8 +162,72 @@ directive:
       verb: Set$|Remove$
       subject: ^Solution
     remove: true
-  # Rename verbs and subjects to friendly names.
-  - from: Microsoft.Migrate/preview/2018-09-01-preview/migrate.json
+  # Remove cmdlets not in scope
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      subject: ^ReplicationRecovery|ReplicationProtectionContainerMapping$|ReplicationEvent$|ReplicationAlertSetting$|ReplicationLogicalNetwork$|^ReplicationProtectedItem|^ReplicationNetwork|^ReplicationStorage|RecoveryPoint$|ProtectableItem$|FabricGateway$|FabricToAad$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Export$|Find$|Switch$|Clear$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      subject: ^Commit|^Planned|^Renew|^Reprotect|^Unplanned|VaultHealth$|vCenter$|ComputeSize$|FabricConsistency$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: New$|Remove$
+      subject: Fabric$|Policy$|ProtectionContainer$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Update$
+      subject: Fabric$|Policy$|ProtectionContainer$
+    remove: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Stop$|Resume$|Restart$
+      subject: Job$
+    remove: true
+  # Hide cmldets used by custom
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Get$
+      subject: ReplicationPolicy$|ReplicationFabric$|ReplicationProtectionContainer$|ReplicationMigrationItem$|ReplicationJob$
+    hide: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Test$
+      subject: ^ReplicationMigrationItemMigrate
+    hide: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: New$|Remove$
+      subject: ^ReplicationMigrationItem
+    hide: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Move$
+      subject: ^ReplicationMigrationItem
+    hide: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Restart$
+      subject: ^ReplicationJob
+    hide: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Invoke$
+      subject: ^ResyncReplicationMigrationItem
+    hide: true
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      verb: Update$
+      subject: ^ReplicationMigrationItem
+    hide: true
+  # Rename verbs to friendly names.
+  - from: Microsoft.OffAzure/stable/2020-01-01/migrate.json
     where:
       verb: Set$
       subject: Project$
@@ -145,3 +252,14 @@ directive:
       subject: Site$|VCenter$
       parameter-name: Name
     clear-alias: true
+  # Table output formatting
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      model-name: MigrationItem
+    set:
+      suppress-format: true 
+  - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
+    where:
+      model-name: Job
+    set:
+      suppress-format: true
