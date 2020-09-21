@@ -52,7 +52,7 @@ function Start-AzMigrateTestMigrationCleanup {
         [Parameter(ParameterSetName='ByInputObjectVMwareCbt', Mandatory)]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Category('Path')]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IMigrationItem]
-        # Specifies the replcating server for which the test migration cleanup needs to be initiated. The server object can be retrieved using the Get-AzMigrateServerReplication cmdlet
+        # Specifies the replicating server for which the test migration cleanup needs to be initiated. The server object can be retrieved using the Get-AzMigrateServerReplication cmdlet
         ${InputObject},
 
         [Parameter()]
@@ -131,11 +131,23 @@ function Start-AzMigrateTestMigrationCleanup {
             $parameterSet = $PSCmdlet.ParameterSetName
 
             if ($parameterSet -eq 'ByNameVMwareCbt') {
-                # TODO Get Vault Name from Project Name
-                $VaultName = "AzMigrateTestProjectPWSH02aarsvault"
-                $applianceName = "AzMigratePWSHT"
                 $null = $PSBoundParameters.Add("ResourceGroupName", $ResourceGroupName)
+                $null = $PSBoundParameters.Add("Name", "Servers-Migration-ServerMigration")
+                $null = $PSBoundParameters.Add("MigrateProjectName", $ProjectName)
+                
+                $solution = Az.Migrate\Get-AzMigrateSolution @PSBoundParameters
+                if($solution -and ($solution.Count -ge 1)){
+                    $VaultName = $solution.DetailExtendedDetail.AdditionalProperties.vaultId.Split("/")[8]
+                    $applianceObj =  ConvertFrom-Json $solution.DetailExtendedDetail.AdditionalProperties.applianceNameToSiteIdMapV2
+                    $applianceName = $applianceObj[0].ApplianceName
+                }else{
+                    throw "Solution not found."
+                }
+                
+                $null = $PSBoundParameters.Remove("Name")
+                $null = $PSBoundParameters.Remove("MigrateProjectName")
                 $null = $PSBoundParameters.Add('ResourceName', $VaultName)
+                
                 $allFabrics = Az.Migrate.internal\Get-AzMigrateReplicationFabric @PSBoundParameters
                 $FabricName = ""
                 if($allFabrics -and ($allFabrics.length -gt 0)){
@@ -147,10 +159,11 @@ function Start-AzMigrateTestMigrationCleanup {
                     }
                 }
                 if($FabricName -eq ""){
-                    throw "Fabric not found for given resource group"
+                    throw "Fabric not found for given resource group."
                 }
 
                 $null = $PSBoundParameters.Add('FabricName', $FabricName)
+                
                 $peContainers = Az.Migrate.internal\Get-AzMigrateReplicationProtectionContainer @PSBoundParameters
                 $ProtectionContainerName = ""
                 if($peContainers -and ($peContainers.length -gt 0)){
@@ -163,7 +176,7 @@ function Start-AzMigrateTestMigrationCleanup {
                 }
 
                 if($ProtectionContainerName -eq ""){
-                    throw "Container not found for given resource group"
+                    throw "Container not found for given resource group."
                 }
 
                 $null = $PSBoundParameters.Remove('ResourceGroupName')

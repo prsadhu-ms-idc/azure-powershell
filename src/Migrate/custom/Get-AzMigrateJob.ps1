@@ -57,6 +57,12 @@ function Get-AzMigrateJob {
         # Specifies the job object of the replicating server.
         ${InputObject},
 
+        [Parameter(ParameterSetName='GetByInputObjectMigrationItem', Mandatory)]
+        [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Category('Path')]
+        [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IMigrationItem]
+        # Specifies the replicating server for which the current job details needs to be initiated. The server object can be retrieved using the Get-AzMigrateServerReplication cmdlet.
+        ${InputServerObject},
+
         [Parameter(ParameterSetName='ListById', Mandatory)]
         [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Category('Path')]
         [System.String]
@@ -168,6 +174,11 @@ function Get-AzMigrateJob {
             }else{
                 if($parameterSet -eq 'GetByInputObject'){
                     $JobID = $InputObject.Id
+                }else{
+                    if($InputServerObject.CurrentJobName -eq "None"){
+                        throw "No current job running."
+                    }
+                    $JobID = $InputServerObject.CurrentJobId
                 }
                 $JobIdArray = $JobID.split('/')
                 $JobName = $JobIdArray[10]

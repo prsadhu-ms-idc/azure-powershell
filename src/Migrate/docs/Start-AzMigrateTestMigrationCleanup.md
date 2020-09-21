@@ -91,7 +91,7 @@ Accept wildcard characters: False
 ```
 
 ### -InputObject
-Specifies the replcating server for which the test migration cleanup needs to be initiated.
+Specifies the replicating server for which the test migration cleanup needs to be initiated.
 The server object can be retrieved using the Get-AzMigrateServerReplication cmdlet
 To construct, see NOTES section for INPUTOBJECT properties and create a hash table.
 
@@ -247,7 +247,7 @@ COMPLEX PARAMETER PROPERTIES
 To create the parameters described below, construct a hash table containing the appropriate properties. For information on hash tables, run Get-Help about_Hash_Tables.
 
 
-INPUTOBJECT <IMigrationItem>: Specifies the replcating server for which the test migration cleanup needs to be initiated. The server object can be retrieved using the Get-AzMigrateServerReplication cmdlet
+INPUTOBJECT <IMigrationItem>: Specifies the replicating server for which the test migration cleanup needs to be initiated. The server object can be retrieved using the Get-AzMigrateServerReplication cmdlet
   - `[Location <String>]`: Resource Location
   - `[CurrentJobId <String>]`: The ARM Id of the job being executed.
   - `[CurrentJobName <String>]`: The job name.

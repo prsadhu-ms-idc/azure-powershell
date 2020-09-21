@@ -31,6 +31,12 @@ Get-AzMigrateJob -InputObject <IJob> [-SubscriptionId <String>] [-DefaultProfile
  [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
 ```
 
+### GetByInputObjectMigrationItem
+```
+Get-AzMigrateJob -InputServerObject <IMigrationItem> [-SubscriptionId <String>] [-DefaultProfile <PSObject>]
+ [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
+```
+
 ### ListById
 ```
 Get-AzMigrateJob -ProjectID <String> -ResourceGroupID <String> [-SubscriptionId <String>] [-Filter <String>]
@@ -120,6 +126,23 @@ To construct, see NOTES section for INPUTOBJECT properties and create a hash tab
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IJob
 Parameter Sets: GetByInputObject
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -InputServerObject
+Specifies the replicating server for which the current job details needs to be initiated.
+The server object can be retrieved using the Get-AzMigrateServerReplication cmdlet.
+To construct, see NOTES section for INPUTSERVEROBJECT properties and create a hash table.
+
+```yaml
+Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IMigrationItem
+Parameter Sets: GetByInputObjectMigrationItem
 Aliases:
 
 Required: True
@@ -341,6 +364,13 @@ INPUTOBJECT <IJob>: Specifies the job object of the replicating server.
     - `[StateDescription <String>]`: The description of the task state. For example - For Succeeded state, description can be Completed, PartiallySucceeded, CompletedWithInformation or Skipped.
     - `[TaskId <String>]`: The Id.
     - `[TaskType <String>]`: The type of task. Details in CustomDetails property depend on this type.
+
+INPUTSERVEROBJECT <IMigrationItem>: Specifies the replicating server for which the current job details needs to be initiated. The server object can be retrieved using the Get-AzMigrateServerReplication cmdlet.
+  - `[Location <String>]`: Resource Location
+  - `[CurrentJobId <String>]`: The ARM Id of the job being executed.
+  - `[CurrentJobName <String>]`: The job name.
+  - `[CurrentJobStartTime <DateTime?>]`: The start time of the job.
+  - `[ProviderSpecificDetail <IMigrationProviderSpecificSettings>]`: The migration provider custom settings.
 
 ## RELATED LINKS
 
