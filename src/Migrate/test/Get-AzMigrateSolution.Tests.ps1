@@ -12,19 +12,15 @@ while(-not $mockingPath) {
 . ($mockingPath | Select-Object -First 1).FullName
 
 Describe 'Get-AzMigrateSolution' {
-    It 'List' {
-        $solutions = Get-AzMigrateSolution -MigrateProjectName  $env.migProjectName -ResourceGroupName $env.migResourceGroup -SubscriptionId $env.migSubscriptionId
-        $solutions.Count | Should -BeGreaterOrEqual 1 
+    It 'List' -skip {
+        { throw [System.NotImplementedException] } | Should -Not -Throw
     }
 
-    It 'Get' {
-        $solution = Get-AzMigrateSolution -Name $env.migSolutionName -MigrateProjectName  $env.migProjectName -ResourceGroupName $env.migResourceGroup -SubscriptionId $env.migSubscriptionId
-        $solution.Name | Should -Be $env.migSolutionName
+    It 'Get' -skip {
+        { throw [System.NotImplementedException] } | Should -Not -Throw
     }
 
-    It 'GetViaIdentity' {
-        $solution1 = Get-AzMigrateSolution -Name $env.migSolutionName -MigrateProjectName  $env.migProjectName -ResourceGroupName $env.migResourceGroup -SubscriptionId $env.migSubscriptionId
-        $solution2 = Get-AzMigrateSolution -InputObject $solution1
-        $solution2.Name | Should -Be $env.migSolutionName
+    It 'GetViaIdentity' -skip {
+        { throw [System.NotImplementedException] } | Should -Not -Throw
     }
 }

@@ -1,33 +1,36 @@
 ---
 external help file:
 Module Name: Az.Migrate
-online version: https://docs.microsoft.com/en-us/powershell/module/az.migrate/remove-azmigrateproject
+online version: https://docs.microsoft.com/en-us/powershell/module/az.migrate/get-azmigratesolution
 schema: 2.0.0
 ---
 
-# Remove-AzMigrateProject
+# Get-AzMigrateSolution
 
 ## SYNOPSIS
-Delete the migrate project.
-Deleting non-existent project is a no-operation.
+Gets a solution in the migrate project.
 
 ## SYNTAX
 
-### Delete (Default)
+### List (Default)
 ```
-Remove-AzMigrateProject -Name <String> -ResourceGroupName <String> [-SubscriptionId <String>]
- [-AcceptLanguage <String>] [-DefaultProfile <PSObject>] [-PassThru] [-Confirm] [-WhatIf] [<CommonParameters>]
+Get-AzMigrateSolution -MigrateProjectName <String> -ResourceGroupName <String> [-SubscriptionId <String[]>]
+ [-DefaultProfile <PSObject>] [<CommonParameters>]
 ```
 
-### DeleteViaIdentity
+### Get
 ```
-Remove-AzMigrateProject -InputObject <IMigrateIdentity> [-AcceptLanguage <String>]
- [-DefaultProfile <PSObject>] [-PassThru] [-Confirm] [-WhatIf] [<CommonParameters>]
+Get-AzMigrateSolution -MigrateProjectName <String> -Name <String> -ResourceGroupName <String>
+ [-SubscriptionId <String[]>] [-DefaultProfile <PSObject>] [<CommonParameters>]
+```
+
+### GetViaIdentity
+```
+Get-AzMigrateSolution -InputObject <IMigrateIdentity> [-DefaultProfile <PSObject>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Delete the migrate project.
-Deleting non-existent project is a no-operation.
+Gets a solution in the migrate project.
 
 ## EXAMPLES
 
@@ -51,22 +54,6 @@ PS C:\> {{ Add code here }}
 
 ## PARAMETERS
 
-### -AcceptLanguage
-Standard request header.
-Used by service to respond to client in appropriate language.
-
-```yaml
-Type: System.String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -DefaultProfile
 The credentials, account, tenant, and subscription used for communication with Azure.
 
@@ -88,7 +75,7 @@ To construct, see NOTES section for INPUTOBJECT properties and create a hash tab
 
 ```yaml
 Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.IMigrateIdentity
-Parameter Sets: DeleteViaIdentity
+Parameter Sets: GetViaIdentity
 Aliases:
 
 Required: True
@@ -98,13 +85,13 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -Name
+### -MigrateProjectName
 Name of the Azure Migrate project.
 
 ```yaml
 Type: System.String
-Parameter Sets: Delete
-Aliases: MigrateProjectName
+Parameter Sets: Get, List
+Aliases:
 
 Required: True
 Position: Named
@@ -113,15 +100,15 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -PassThru
-Returns true when the command succeeds
+### -Name
+Unique name of a migration solution within a migrate project.
 
 ```yaml
-Type: System.Management.Automation.SwitchParameter
-Parameter Sets: (All)
-Aliases:
+Type: System.String
+Parameter Sets: Get
+Aliases: SolutionName
 
-Required: False
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -133,7 +120,7 @@ Name of the Azure Resource Group that migrate project is part of.
 
 ```yaml
 Type: System.String
-Parameter Sets: Delete
+Parameter Sets: Get, List
 Aliases:
 
 Required: True
@@ -147,44 +134,13 @@ Accept wildcard characters: False
 Azure Subscription Id in which migrate project was created.
 
 ```yaml
-Type: System.String
-Parameter Sets: Delete
+Type: System.String[]
+Parameter Sets: Get, List
 Aliases:
 
 Required: False
 Position: Named
 Default value: (Get-AzContext).Subscription.Id
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
-
-```yaml
-Type: System.Management.Automation.SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
-
-```yaml
-Type: System.Management.Automation.SwitchParameter
-Parameter Sets: (All)
-Aliases: wi
-
-Required: False
-Position: Named
-Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -198,7 +154,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### System.Boolean
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180901Preview.ISolution
+
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180901Preview.ISolutionsCollection
 
 ## NOTES
 
@@ -211,20 +169,40 @@ To create the parameters described below, construct a hash table containing the 
 
 INPUTOBJECT <IMigrateIdentity>: Identity Parameter
   - `[AccountName <String>]`: Run as account ARM name.
+  - `[AlertSettingName <String>]`: The name of the email notification configuration.
   - `[ClusterName <String>]`: Cluster ARM name.
   - `[DatabaseInstanceName <String>]`: Unique name of a database instance in Azure migration hub.
   - `[DatabaseName <String>]`: Unique name of a database in Azure migration hub.
   - `[EventName <String>]`: Unique name of an event within a migrate project.
+  - `[FabricName <String>]`: Fabric unique name.
   - `[HostName <String>]`: Host ARM name.
   - `[Id <String>]`: Resource identity path
-  - `[JobName <String>]`: Job ARM name.
+  - `[JobName <String>]`: Job identifier
+  - `[LogicalNetworkName <String>]`: Logical network name.
   - `[MachineName <String>]`: Machine ARM name.
+  - `[MappingName <String>]`: Protection Container mapping name.
   - `[MigrateProjectName <String>]`: Name of the Azure Migrate project.
+  - `[MigrationItemName <String>]`: Migration item name.
+  - `[MigrationRecoveryPointName <String>]`: The migration recovery point name.
+  - `[NetworkMappingName <String>]`: Network mapping name.
+  - `[NetworkName <String>]`: Primary network name.
   - `[OperationStatusName <String>]`: Operation status ARM name.
+  - `[PolicyName <String>]`: Replication policy name.
+  - `[ProtectableItemName <String>]`: Protectable item name.
+  - `[ProtectionContainerName <String>]`: Protection container name.
+  - `[ProviderName <String>]`: Recovery services provider name
+  - `[RecoveryPlanName <String>]`: Name of the recovery plan.
+  - `[RecoveryPointName <String>]`: The recovery point name.
+  - `[ReplicatedProtectedItemName <String>]`: Replication protected item name.
+  - `[ReplicationProtectedItemName <String>]`: The name of the protected item on which the agent is to be updated.
   - `[ResourceGroupName <String>]`: The name of the resource group. The name is case insensitive.
+  - `[ResourceName <String>]`: The name of the recovery services vault.
   - `[SiteName <String>]`: Site name.
   - `[SolutionName <String>]`: Unique name of a migration solution within a migrate project.
+  - `[StorageClassificationMappingName <String>]`: Storage classification mapping name.
+  - `[StorageClassificationName <String>]`: Storage classification name.
   - `[SubscriptionId <String>]`: The ID of the target subscription.
+  - `[VCenterName <String>]`: vCenter name.
   - `[VcenterName <String>]`: VCenter ARM name.
 
 ## RELATED LINKS
