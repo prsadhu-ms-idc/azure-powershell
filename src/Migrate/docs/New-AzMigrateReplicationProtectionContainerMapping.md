@@ -1,52 +1,28 @@
 ---
 external help file:
 Module Name: Az.Migrate
-online version: https://docs.microsoft.com/en-us/powershell/module/az.migrate/get-azmigrateserverreplication
+online version: https://docs.microsoft.com/en-us/powershell/module/az.migrate/new-azmigratereplicationprotectioncontainermapping
 schema: 2.0.0
 ---
 
-# Get-AzMigrateServerReplication
+# New-AzMigrateReplicationProtectionContainerMapping
 
 ## SYNOPSIS
-Retrieves the details of the replicating server.
+The operation to create a protection container mapping.
 
 ## SYNTAX
 
-### ListByName (Default)
 ```
-Get-AzMigrateServerReplication -ProjectName <String> -ResourceGroupName <String> [-SubscriptionId <String>]
- [-Filter <String>] [-SkipToken <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
- [<CommonParameters>]
-```
-
-### GetByID
-```
-Get-AzMigrateServerReplication -TargetObjectID <String> [-SubscriptionId <String>]
- [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
-```
-
-### GetByInputObject
-```
-Get-AzMigrateServerReplication -InputObject <IMigrationItem> [-SubscriptionId <String>]
- [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf] [<CommonParameters>]
-```
-
-### GetByName
-```
-Get-AzMigrateServerReplication -MachineName <String> -ProjectName <String> -ResourceGroupName <String>
- [-SubscriptionId <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
- [<CommonParameters>]
-```
-
-### ListById
-```
-Get-AzMigrateServerReplication -ProjectID <String> -ResourceGroupID <String> [-SubscriptionId <String>]
- [-Filter <String>] [-SkipToken <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
+New-AzMigrateReplicationProtectionContainerMapping -FabricName <String> -MappingName <String>
+ -ProtectionContainerName <String> -ResourceGroupName <String> -ResourceName <String>
+ [-SubscriptionId <String>] [-PolicyId <String>]
+ [-ProviderSpecificInput <IReplicationProviderSpecificContainerMappingInput>]
+ [-TargetProtectionContainerId <String>] [-DefaultProfile <PSObject>] [-AsJob] [-NoWait] [-Confirm] [-WhatIf]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-The Get-AzMigrateServerReplication cmdlet retrieves the object for the replicating server.
+The operation to create a protection container mapping.
 
 ## EXAMPLES
 
@@ -100,28 +76,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Filter
-OData filter options.
+### -FabricName
+Fabric name.
 
 ```yaml
 Type: System.String
-Parameter Sets: ListById, ListByName
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -InputObject
-Specifies the machine object of the replicating server.
-To construct, see NOTES section for INPUTOBJECT properties and create a hash table.
-
-```yaml
-Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IMigrationItem
-Parameter Sets: GetByInputObject
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -131,12 +91,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -MachineName
-Specifies the server for which the details needs to be retrieved.
+### -MappingName
+Protection container mapping name.
 
 ```yaml
 Type: System.String
-Parameter Sets: GetByName
+Parameter Sets: (All)
 Aliases:
 
 Required: True
@@ -161,72 +121,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ProjectID
-Specifies the Azure Migrate Project in which servers are replicating.
+### -PolicyId
+Applicable policy.
 
 ```yaml
 Type: System.String
-Parameter Sets: ListById
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProjectName
-Specifies the Azure Migrate project  in the current subscription.
-
-```yaml
-Type: System.String
-Parameter Sets: GetByName, ListByName
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ResourceGroupID
-Specifies the Resource Group of the Azure Migrate Project in the current subscription.
-
-```yaml
-Type: System.String
-Parameter Sets: ListById
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ResourceGroupName
-Specifies the Resource Group of the Azure Migrate Project in the current subscription.
-
-```yaml
-Type: System.String
-Parameter Sets: GetByName, ListByName
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -SkipToken
-The pagination token.
-
-```yaml
-Type: System.String
-Parameter Sets: ListById, ListByName
+Parameter Sets: (All)
 Aliases:
 
 Required: False
@@ -236,8 +136,69 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -ProtectionContainerName
+Protection container name.
+
+```yaml
+Type: System.String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProviderSpecificInput
+Provider specific input for pairing.
+To construct, see NOTES section for PROVIDERSPECIFICINPUT properties and create a hash table.
+
+```yaml
+Type: Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IReplicationProviderSpecificContainerMappingInput
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceGroupName
+The name of the resource group where the recovery services vault is present.
+
+```yaml
+Type: System.String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ResourceName
+The name of the recovery services vault.
+
+```yaml
+Type: System.String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -SubscriptionId
-Azure Subscription ID.
+The subscription Id.
 
 ```yaml
 Type: System.String
@@ -251,15 +212,15 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -TargetObjectID
-Specifies the replicating server.
+### -TargetProtectionContainerId
+The target unique protection container name.
 
 ```yaml
 Type: System.String
-Parameter Sets: GetByID
+Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -304,7 +265,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IMigrationItem
+### Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.IProtectionContainerMapping
 
 ## NOTES
 
@@ -315,12 +276,8 @@ COMPLEX PARAMETER PROPERTIES
 To create the parameters described below, construct a hash table containing the appropriate properties. For information on hash tables, run Get-Help about_Hash_Tables.
 
 
-INPUTOBJECT <IMigrationItem>: Specifies the machine object of the replicating server.
-  - `[Location <String>]`: Resource Location
-  - `[CurrentJobId <String>]`: The ARM Id of the job being executed.
-  - `[CurrentJobName <String>]`: The job name.
-  - `[CurrentJobStartTime <DateTime?>]`: The start time of the job.
-  - `[ProviderSpecificDetail <IMigrationProviderSpecificSettings>]`: The migration provider custom settings.
+PROVIDERSPECIFICINPUT <IReplicationProviderSpecificContainerMappingInput>: Provider specific input for pairing.
+  - `[InstanceType <String>]`: The class type.
 
 ## RELATED LINKS
 

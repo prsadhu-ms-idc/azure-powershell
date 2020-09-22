@@ -1,6 +1,6 @@
 ---
 Module Name: Az.Migrate
-Module Guid: 52dd74b5-1c0f-469a-942e-508eb7375c81
+Module Guid: aa66b0fe-a524-4f80-94dc-2f3aa487df53
 Download Help Link: https://docs.microsoft.com/en-us/powershell/module/az.migrate
 Help Version: 1.0.0.0
 Locale: en-US
@@ -47,6 +47,9 @@ Cleanup the solution data in the migrate project.
 ### [New-AzMigrateDiskMapping](New-AzMigrateDiskMapping.md)
 The New-AzMigrateDiskMapping cmdlet creates a mapping of the source disk attached to the server to be migrated
 
+### [New-AzMigrateProject](New-AzMigrateProject.md)
+Method to create or update a migrate project.
+
 ### [New-AzMigrateReplicationPolicy](New-AzMigrateReplicationPolicy.md)
 The operation to create a replication policy
 
@@ -75,21 +78,14 @@ The Remove-AzMigrateServerReplication cmdlet stops the replication for a migrate
 ### [Remove-AzMigrateSite](Remove-AzMigrateSite.md)
 Method to delete a site.
 
-### [Remove-AzMigrateSolution](Remove-AzMigrateSolution.md)
-Delete the solution.
-Deleting non-existent project is a no-operation.
-
 ### [Restart-AzMigrateServerReplication](Restart-AzMigrateServerReplication.md)
 The Restart-AzMigrateServerReplication cmdlet repairs the replication for the specified server.
-
-### [Set-AzMigrateProject](Set-AzMigrateProject.md)
-Method to create or update a migrate project.
 
 ### [Set-AzMigrateServerReplication](Set-AzMigrateServerReplication.md)
 The Set-AzMigrateServerReplication cmdlet updates the target properties for the replicating server.
 
-### [Set-AzMigrateSolution](Set-AzMigrateSolution.md)
-Creates a solution in the migrate project.
+### [Set-AzMigrateSite](Set-AzMigrateSite.md)
+Method to create or update a site.
 
 ### [Start-AzMigrateMachine](Start-AzMigrateMachine.md)
 Method to start a machine.
