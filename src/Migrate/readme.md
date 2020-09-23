@@ -107,7 +107,7 @@ directive:
   - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
     where:
       verb: Get$
-      subject: ReplicationFabric$|ReplicationPolicy$|ReplicationProtectionContainer$|ReplicationMigrationItem$|ReplicationJob$|ReplicationProtectionContainerMapping$
+      subject: ReplicationFabric$|ReplicationPolicy$|ReplicationProtectionContainer$|ReplicationMigrationItem$|ReplicationJob$|ReplicationProtectionContainerMapping$|ReplicationRecoveryServicesProvider$
       variant: ^GetViaIdentity$
     remove: true
   - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
@@ -159,7 +159,7 @@ directive:
   # Remove cmdlets not in scope
   - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
     where:
-      subject: ^ReplicationRecovery|ReplicationEvent$|ReplicationAlertSetting$|ReplicationLogicalNetwork$|^ReplicationProtectedItem|^ReplicationNetwork|^ReplicationStorage|RecoveryPoint$|ProtectableItem$|FabricGateway$|FabricToAad$
+      subject: ^ReplicationRecoveryPlan|ReplicationRecoveryServiceProvider$|ReplicationEvent$|ReplicationAlertSetting$|ReplicationLogicalNetwork$|^ReplicationProtectedItem|^ReplicationNetwork|^ReplicationStorage|RecoveryPoint$|ProtectableItem$|FabricGateway$|FabricToAad$
     remove: true
   - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
     where:
@@ -172,12 +172,12 @@ directive:
   - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
     where:
       verb: New$|Remove$
-      subject: Fabric$|ProtectionContainer$
+      subject: Fabric$|ProtectionContainer$|ReplicationRecoveryServicesProvider$
     remove: true
   - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
     where:
       verb: Update$
-      subject: Fabric$|Policy$|ProtectionContainer$
+      subject: Fabric$|Policy$|ProtectionContainer$|ReplicationProtectionContainerMapping$
     remove: true
   - from: Microsoft.RecoveryServices/stable/2018-01-10/service.json
     where:

@@ -26,6 +26,9 @@ Gets the details of a replication policy.
 ### [Get-AzMigrateReplicationProtectionContainerMapping](Get-AzMigrateReplicationProtectionContainerMapping.md)
 Gets the details of a protection container mapping.
 
+### [Get-AzMigrateReplicationRecoveryServicesProvider](Get-AzMigrateReplicationRecoveryServicesProvider.md)
+Gets the details of registered recovery services provider.
+
 ### [Get-AzMigrateRunAsAccount](Get-AzMigrateRunAsAccount.md)
 Method to get run as account.
 
@@ -56,9 +59,6 @@ The operation to create a protection container mapping.
 ### [New-AzMigrateServerReplication](New-AzMigrateServerReplication.md)
 The New-AzMigrateServerReplication cmdlet starts the replication for a particular discovered server in the Azure Migrate project.
 
-### [New-AzMigrateSite](New-AzMigrateSite.md)
-Method to create or update a site.
-
 ### [Remove-AzMigrateProject](Remove-AzMigrateProject.md)
 Delete the migrate project.
 Deleting non-existent project is a no-operation.
@@ -71,9 +71,6 @@ The operation to delete or remove a protection container mapping.
 
 ### [Remove-AzMigrateServerReplication](Remove-AzMigrateServerReplication.md)
 The Remove-AzMigrateServerReplication cmdlet stops the replication for a migrated server.
-
-### [Remove-AzMigrateSite](Remove-AzMigrateSite.md)
-Method to delete a site.
 
 ### [Remove-AzMigrateSolution](Remove-AzMigrateSolution.md)
 Delete the solution.
@@ -112,9 +109,6 @@ Supports partial updates, for example only tags can be provided.
 
 ### [Update-AzMigrateProjectSummary](Update-AzMigrateProjectSummary.md)
 Refresh the summary of the migrate project.
-
-### [Update-AzMigrateReplicationProtectionContainerMapping](Update-AzMigrateReplicationProtectionContainerMapping.md)
-The operation to update protection container mapping.
 
 ### [Update-AzMigrateSite](Update-AzMigrateSite.md)
 Method to refresh a site.
