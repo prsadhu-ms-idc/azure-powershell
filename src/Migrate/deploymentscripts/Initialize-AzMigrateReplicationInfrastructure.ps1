@@ -54,7 +54,6 @@ param(
 process {
         Import-Module -Name Az.Migrate
 
-        Set-PSDebug -Step; foreach ($i in 1..3) {$i}
         if($Scenario -ne "agentlessVMware"){
             throw "We currently support only agentlessVMware."
         }
