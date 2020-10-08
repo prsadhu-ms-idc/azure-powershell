@@ -223,12 +223,14 @@ public static int hashForArtifact(String artifact)
                 $accessPolicies += $hyperVAccessPolicy
                 $projectRSPObject = Get-AzMigrateReplicationRecoveryServicesProvider -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
                 foreach ($projectRSP in $projectRSPObject) {
-                    $projectAccessPolicy = @{
-                        "tenantId" = $tenantID;
-                        "objectId" =  $projectRSP.ResourceAccessIdentityDetailObjectId;
-                        "permissions" = $KeyVaultPermissions
+                    if($projectRSP.FabricType -eq "VMwareV2"){
+                        $projectAccessPolicy = @{
+                            "tenantId" = $tenantID;
+                            "objectId" =  $projectRSP.ResourceAccessIdentityDetailObjectId;
+                            "permissions" = $KeyVaultPermissions
+                        }
+                        $accessPolicies += $projectAccessPolicy
                     }
-                    $accessPolicies += $projectAccessPolicy
                 }
                 $keyVaultProperties = @{
                     sku = @{
