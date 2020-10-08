@@ -20,6 +20,8 @@ Az.Resources
 Az.KeyVault
 Az.ServiceBus
 Az.Migrate
+
+Example Invocation:  .\Initialize-AzMigrateReplicationInfrastructure.ps1 -ResourceGroupName TestRG  -ProjectName TestProject -Vmwareagentless -TargetRegion centralus
 #>
 
 param(
@@ -51,9 +53,6 @@ param(
 
 process {
         Import-Module -Name Az.Migrate
-    
-        Set-PSDebug -Step; foreach ($i in 1..3) {$i}
-
         # Get/Set SubscriptionId
         if(($SubscriptionId -eq $null) -or ($SubscriptionId -eq "")){
             $context = Get-AzContext
@@ -64,35 +63,17 @@ process {
         }else{
             Select-AzSubscription -SubscriptionId $SubscriptionId
         }
+        $context = Get-AzContext
         Write-Host "Using Subscription Id: ", $SubscriptionId
-     
-        # Validate target region
-        $availableRegions = Get-AzLocation
-        $targetRegionObject = $null
-        foreach($location in $availableRegions){
-            if ($location.Location -eq $TargetRegion){
-                $targetRegionObject = $location
-                break
-            }
-        }
-        if ($targetRegionObject -eq $null){
-            throw "Please input a valid target region." 
-        }
-
         Write-Host "Selected Target Region: ", $TargetRegion
         
-        try{
-            Get-AzResourceGroup -Name $ResourceGroupName
-        }catch{
-            if($Error[0].Exception -match "Provided resource group does not exist"){
-                Write-Host "Creating Resource Group ", $ResourceGroupName
-                New-AzResourceGroup -Name $ResourceGroupName -Location $TargetRegion
-                Write-Host $ResourceGroupName, " created."
-            }else{
-                throw
-            }
+        $rg = Get-AzResourceGroup -Name $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
+        if(!$rg){
+            Write-Host "Creating Resource Group ", $ResourceGroupName
+            New-AzResourceGroup -Name $ResourceGroupName -Location $TargetRegion
+            Write-Host $ResourceGroupName, " created."
         }
-        Write-Host "Select resource group : ", $ResourceGroupName
+        Write-Host "Selected resource group : ", $ResourceGroupName
 
         # Hash code source code
         $Source = @"
@@ -113,8 +94,10 @@ public static int hashForArtifact(String artifact)
 }
 }
 "@
-        Add-Type -TypeDefinition $Source -Language CSharp 
-
+    
+    
+           
+        
         # Get all appliances and sites in the project
         $solution = Get-AzMigrateSolution -MigrateProjectName $ProjectName -ResourceGroupName $ResourceGroupName -Name "Servers-Migration-ServerMigration"
         $VaultName = $solution.DetailExtendedDetail.AdditionalProperties.vaultId.Split("/")[8]
@@ -126,7 +109,14 @@ public static int hashForArtifact(String artifact)
             $SiteName = $eachApp.SiteId.Split("/")[8]
             $applianceName = $eachApp.ApplianceName
             $HashCodeInput = $SiteName + $TargetRegion
-            $hash = [HashFunctions]::hashForArtifact($HashCodeInput) 
+
+            $job = Start-Job -ScriptBlock {
+                Add-Type -TypeDefinition $args[0] -Language CSharp 
+                $hash = [HashFunctions]::hashForArtifact($args[1]) 
+                $hash
+            } -ArgumentList $Source,$HashCodeInput
+            Wait-Job $job
+            $hash = Receive-Job $job
 
             Write-Host "Initiating Artifact Creation for Appliance: ", $applianceName
 
@@ -153,17 +143,17 @@ public static int hashForArtifact(String artifact)
             $StorageSku = @{name="Standard_LRS"}
             $ResourceKind = "Storage"
             
-            $lsaStorageAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $LogStorageAcName
+            $lsaStorageAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $LogStorageAcName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$lsaStorageAccount){
-                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $LogStorageProperties -ResourceName $LogStorageAcName -ResourceType  $StorageType -ApiVersion $StorageApiVersion -Kind  $ResourceKind -Sku  $StorageSku -Tag $ResourceTag
+                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $LogStorageProperties -ResourceName $LogStorageAcName -ResourceType  $StorageType -ApiVersion $StorageApiVersion -Kind  $ResourceKind -Sku  $StorageSku -Tag $ResourceTag -Force
                 Write-Host $LogStringCreated, $LogStorageAcName
             }else{
                 Write-Host $LogStorageAcName, $LogStringSkipping
             }
 
-            $gwyStorageAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $GateWayStorageAcName
+            $gwyStorageAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $GateWayStorageAcName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$gwyStorageAccount){
-                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $LogStorageProperties -ResourceName $GateWayStorageAcName -ResourceType  $StorageType -ApiVersion $StorageApiVersion -Kind  $ResourceKind -Sku  $StorageSku -Tag $ResourceTag
+                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $LogStorageProperties -ResourceName $GateWayStorageAcName -ResourceType  $StorageType -ApiVersion $StorageApiVersion -Kind  $ResourceKind -Sku  $StorageSku -Tag $ResourceTag -Force
                 Write-Host $LogStringCreated, $GateWayStorageAcName
             }else{
                 Write-Host $GateWayStorageAcName, $LogStringSkipping
@@ -180,9 +170,9 @@ public static int hashForArtifact(String artifact)
             $ServiceBusProperties = @{}
             $ServieBusKind = "ServiceBusNameSpace"
     
-            $serviceBusAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $ServiceBusNamespace
+            $serviceBusAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $ServiceBusNamespace -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$serviceBusAccount){
-                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $ServiceBusProperties -ResourceName $ServiceBusNamespace -ResourceType  $ServiceBusType -ApiVersion $ServiceBusApiVersion -Kind  $ServieBusKind -Sku  $ServiceBusSku -Tag $ResourceTag
+                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $ServiceBusProperties -ResourceName $ServiceBusNamespace -ResourceType  $ServiceBusType -ApiVersion $ServiceBusApiVersion -Kind  $ServieBusKind -Sku  $ServiceBusSku -Tag $ResourceTag -Force
                 Write-Host $LogStringCreated, $ServiceBusNamespace
             }else{
                 Write-Host $ServiceBusNamespace, $LogStringSkipping
@@ -194,7 +184,7 @@ public static int hashForArtifact(String artifact)
             $KeyVaultApiVersion = "2016-10-01"
             $KeyVaultKind = "KeyVault"
             
-            $existingKeyVaultAccount =  Get-AzResource -ResourceGroupName $ResourceGroupName -Name $KeyVaultName
+            $existingKeyVaultAccount =  Get-AzResource -ResourceGroupName $ResourceGroupName -Name $KeyVaultName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if($existingKeyVaultAccount){
                 Write-Host $KeyVaultName, $LogStringSkipping
             }else{
@@ -242,128 +232,110 @@ public static int hashForArtifact(String artifact)
                         family = "A";
                         name = "standard"
                     };
-                    tenantId = ;
+                    tenantId = $tenantID;
                     enabledForDeployment = $true;
-                    enabledForDiskEncryption = $true;
+                    enabledForDiskEncryption = $false;
                     enabledForTemplateDeployment = $true;
                     accessPolicies = $accessPolicies
                 }
 
-                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $keyVaultProperties -ResourceName $KeyVaultName -ResourceType  $KeyVaultType -ApiVersion $KeyVaultApiVersion -Kind $KeyVaultKind -Tag $ResourceTag
+                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $keyVaultProperties -ResourceName $KeyVaultName -ResourceType  $KeyVaultType -ApiVersion $KeyVaultApiVersion -Kind $KeyVaultKind -Tag $ResourceTag -Force
                 Write-Host $LogStringCreated, $KeyVaultName
             }
 
             # Locks
             $CommonLockName = $ProjectName + "lock"
+            $lockNotes = "This is in use by Azure Migrate project"
+            $lsaLock = Get-AzResourceLock -LockName $CommonLockName -ResourceName $LogStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
+            if(!$lsaLock){
+                New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $LogStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
+                Write-Host $LogStringCreated, $CommonLockName, " for ", $LogStorageAcName
+            }else{
+                Write-Host $CommonLockName, " for ", $LogStorageAcName, $LogStringSkipping
+            }
+            
+            $gwyLock = Get-AzResourceLock -LockName $CommonLockName -ResourceName $GateWayStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
+            if(!$gwyLock){
+                New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $GateWayStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
+                Write-Host $LogStringCreated, $CommonLockName, " for ", $GateWayStorageAcName
+            }else{
+                Write-Host $CommonLockName, " for ", $LogStorageAcName, $LogStringSkipping
+            }
 
-            try{
-                Get-AzResourceLock -LockName $CommonLockName -ResourceName $LogStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName
-                Write-Host $CommonLockName, " for ", $LogStorageAcName, $LogStringSkipping
-            }catch{
-                if($Error[0].Exception -match 'LockNotFound'){
-                    New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $LogStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName
-                    Write-Host $LogStringCreated, $CommonLockName, " for ", $LogStorageAcName
-                }else{
-                    throw
-                }
-            }
-            try{
-                Get-AzResourceLock -LockName $CommonLockName -ResourceName $GateWayStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName
-                Write-Host $CommonLockName, " for ", $LogStorageAcName, $LogStringSkipping
-            }catch{
-                if($Error[0].Exception -match 'LockNotFound'){
-                    New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $GateWayStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName
-                    Write-Host $LogStringCreated, $CommonLockName, " for ", $GateWayStorageAcName
-                }else{
-                    throw
-                }
-            }
-            try{
-                Get-AzResourceLock -LockName $CommonLockName -ResourceName $ServiceBusNamespace -ResourceType $ServiceBusType -ResourceGroupName $ResourceGroupName
+            $sbsnsLock = Get-AzResourceLock -LockName $CommonLockName -ResourceName $ServiceBusNamespace -ResourceType $ServiceBusType -ResourceGroupName $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
+            if(!$sbsnsLock){
+                New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $ServiceBusNamespace -ResourceType $ServiceBusType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
+                Write-Host $LogStringCreated, $CommonLockName, " for ", $ServiceBusNamespace
+            }else{
                 Write-Host $CommonLockName, " for ", $ServiceBusNamespace, $LogStringSkipping
-            }catch{
-                if($Error[0].Exception -match 'LockNotFound'){
-                    New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $ServiceBusNamespace -ResourceType $ServiceBusType -ResourceGroupName $ResourceGroupName
-                    Write-Host $LogStringCreated, $CommonLockName, " for ", $ServiceBusNamespace
-                }else{
-                    throw
-                }
             }
-            try{
-                Get-AzResourceLock -LockName $CommonLockName -ResourceName $KeyVaultName -ResourceType $KeyVaultType -ResourceGroupName $ResourceGroupName
+
+            $kvLock = Get-AzResourceLock -LockName $CommonLockName -ResourceName $KeyVaultName -ResourceType $KeyVaultType -ResourceGroupName $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
+            if(!$kvLock){
+                New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $KeyVaultName -ResourceType $KeyVaultType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
+                Write-Host $LogStringCreated, $CommonLockName, " for ", $KeyVaultName
+            }else{
                 Write-Host $CommonLockName, " for ", $KeyVaultName, $LogStringSkipping
-            }catch{
-                if($Error[0].Exception -match 'LockNotFound'){
-                    New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $KeyVaultName -ResourceType $KeyVaultType -ResourceGroupName $ResourceGroupName
-                    Write-Host $LogStringCreated, $CommonLockName, " for ", $KeyVaultName
-                }else{
-                    throw
-                }
             }
+            
 
             # Intermediate phase
             # RoleAssignments
             
+            $roleDefinitionId = "81a9662b-bebf-436f-a333-f67b29880f12"
             $kvspnid = (Get-AzADServicePrincipal -DisplayName "Azure Key Vault" )[0].Id
-            $gwyStorageAccount = Get-AzResource -ResourceName $GateWayStorageAcName -ResourceGroupName $ResourceGroupName
+            $gwyStorageAccount = Get-AzResource -ResourceName $GateWayStorageAcName -ResourceGroupName $ResourceGroupName 
             $lsaStorageAccount = Get-AzResource -ResourceName $LogStorageAcName -ResourceGroupName $ResourceGroupName
-            $lsaRoleAssignments = Get-AzRoleAssignment -ObjectId $kvspnid -Scope $gwyStorageAccount.Id
-            $gwyRoleAssignments = Get-AzRoleAssignment -ObjectId $kvspnid -Scope $lsaStorageAccount.Id
+            $gwyRoleAssignments = Get-AzRoleAssignment -ObjectId $kvspnid -Scope $gwyStorageAccount.Id -ErrorVariable notPresent -ErrorAction SilentlyContinue
+            $lsaRoleAssignments = Get-AzRoleAssignment -ObjectId $kvspnid -Scope $lsaStorageAccount.Id -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$lsaRoleAssignments){
-                New-AzRoleAssignment -ObjectId $kvspnid -Scope $lsaStorageAccount.Id
+                New-AzRoleAssignment -ObjectId $kvspnid -Scope $lsaStorageAccount.Id -RoleDefinitionId $roleDefinitionId
                 Write-Host $LogStringCreated, "RoleAssignment", " for ", $LogStorageAcName
             }else{
                 Write-Host "RoleAssignment", " for ", $LogStorageAcName, $LogStringSkipping
             }
             if(!$gwyRoleAssignments){
-                New-AzRoleAssignment -ObjectId $kvspnid -Scope $gwyStorageAccount.Id
+                New-AzRoleAssignment -ObjectId $kvspnid -Scope $gwyStorageAccount.Id -RoleDefinitionId $roleDefinitionId
                 Write-Host $LogStringCreated, "RoleAssignment", " for ", $GateWayStorageAcName
             }else{
                 Write-Host "RoleAssignment", " for ", $GateWayStorageAcName, $LogStringSkipping
             }
 
             # SA. SAS definition
-            $managedLsaAccount = $null
-            $managedGwyAccount = $null
-            try{ $managedLsaAccount =  Get-AzKeyVaultManagedStorageAccount -VaultName $KeyVaultName -Name $LogStorageAcName }catch{}
-            try{ $managedGwyAccount =  Get-AzKeyVaultManagedStorageAccount -VaultName $KeyVaultName -Name $GateWayStorageAcName }catch{}
 
             $gatewayStorageAccountSasSecretName = "gwySas"
             $cacheStorageAccountSasSecretName = "cacheSas"
-            $managedLsaAccountSASAccount = $null
-            $managedGwyAccountSASAccount = $null
             $regenerationPeriod = [System.Timespan]::FromDays(30)
-            try{ $managedLsaAccountSASAccount = Get-AzKeyVaultManagedStorageSasDefinition -VaultName $KeyVaultName -AccountName $LogStorageAcName -Name $cacheStorageAccountSasSecretName }catch{}
-            try{ $managedGwyAccountSASAccount = Get-AzKeyVaultManagedStorageSasDefinition -VaultName $KeyVaultName -AccountName $GateWayStorageAcName -Name $gatewayStorageAccountSasSecretName }catch{}
-            if(!$managedLsaAccount){
-                Add-AzKeyVaultManagedStorageAccount -VaultName $KeyVaultName -AccountName $LogStorageAcName -AccountResourceId  $lsaStorageAccount.Id  -ActiveKeyName 'Key2' -RegenerationPeriod $regenerationPeriod
-                Write-Host $LogStringCreated, "VaultManagedStorageAccount", " for ", $LogStorageAcName
-            }else{
-                Write-Host "VaultManagedStorageAccount", " for ", $LogStorageAcName, $LogStringSkipping
-            }
-            if(!$managedGwyAccount){
-                Add-AzKeyVaultManagedStorageAccount -VaultName $KeyVaultName -AccountName $GateWayStorageAcName -AccountResourceId  $gwyStorageAccount.Id  -ActiveKeyName 'Key2' -RegenerationPeriod $regenerationPeriod
-                Write-Host $LogStringCreated, "VaultManagedStorageAccount", " for ", $GateWayStorageAcName
-            }else{
-                Write-Host "VaultManagedStorageAccount", " for ", $GateWayStorageAcName, $LogStringSkipping
-            }
-            if(!$managedLsaAccountSASAccount){
-                Set-AzKeyVaultManagedStorageSasDefinition -AccountName $LogStorageAcName -VaultName $KeyVaultName -Name $cacheStorageAccountSasSecretName -SasType 'account' -ValidityPeriod $regenerationPeriod
-                Write-Host $LogStringCreated, "ManagedStorageSasDefinition", " for ", $LogStorageAcName
-            }else{
-                Write-Host "ManagedStorageSasDefinition", " for ", $LogStorageAcName, $LogStringSkipping
-            }
-            if(!$managedGwyAccountSASAccount){
-                Set-AzKeyVaultManagedStorageSasDefinition -AccountName $GateWayStorageAcName -VaultName $KeyVaultName -Name $gatewayStorageAccountSasSecretName -SasType 'account' -ValidityPeriod $regenerationPeriod
-                Write-Host $LogStringCreated, "ManagedStorageSasDefinition", " for ", $GateWayStorageAcName
-            }else{
-                Write-Host "ManagedStorageSasDefinition", " for ", $GateWayStorageAcName, $LogStringSkipping
-            }
+            $keyName = 'Key2'
+            Add-AzKeyVaultManagedStorageAccount -VaultName $KeyVaultName -AccountName $LogStorageAcName -AccountResourceId  $lsaStorageAccount.Id  -ActiveKeyName $keyName -RegenerationPeriod $regenerationPeriod
+            Add-AzKeyVaultManagedStorageAccount -VaultName $KeyVaultName -AccountName $GateWayStorageAcName -AccountResourceId  $gwyStorageAccount.Id  -ActiveKeyName $keyName -RegenerationPeriod $regenerationPeriod
+
+            $lsasctx = New-AzStorageContext -StorageAccountName $LogStorageAcName -Protocol Https -StorageAccountKey $keyName
+            $gwysctx = New-AzStorageContext -StorageAccountName $GateWayStorageAcName -Protocol Https -StorageAccountKey $keyName
+
+            $lsaat = New-AzStorageAccountSasToken -Service blob,file,Table,Queue -ResourceType Service,Container,Object -Permission "racwdlup" -Protocol HttpsOnly -Context $lsasctx
+            $gwyat = New-AzStorageAccountSasToken -Service blob,file,Table,Queue -ResourceType Service,Container,Object -Permission "racwdlup" -Protocol HttpsOnly -Context $gwysctx
+
+            Set-AzKeyVaultManagedStorageSasDefinition -AccountName $LogStorageAcName -VaultName $KeyVaultName -Name $cacheStorageAccountSasSecretName -TemplateUri $lsaat -SasType 'account' -ValidityPeriod ([System.Timespan]::FromDays(30))
+            Set-AzKeyVaultManagedStorageSasDefinition -AccountName $GateWayStorageAcName -VaultName $KeyVaultName -Name $gatewayStorageAccountSasSecretName -TemplateUri $gwyat -SasType 'account' -ValidityPeriod ([System.Timespan]::FromDays(30))
             
             # Phase 2
+           
+            # ServiceBusConnectionString
+            $serviceBusConnString = "ServiceBusConnectionString"
+            $serviceBusSecretObject = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $serviceBusConnString -ErrorVariable notPresent -ErrorAction SilentlyContinue
+            if($serviceBusSecretObject){
+                Write-Host $serviceBusConnString, " for ", $applianceName, $LogStringSkipping
+            }else{
+                $serviceBusRootKey = Get-AzServiceBusKey -ResourceGroupName $ResourceGroupName -Namespace $ServiceBusNamespace -Name "RootManageSharedAccessKey"
+                $secret = ConvertTo-SecureString -String $serviceBusRootKey.PrimaryConnectionString -AsPlainText -Force
+                Set-AzKeyVaultSecret -VaultName $KeyVaultName -Name $serviceBusConnString -SecretValue $secret
+                Write-Host $LogStringCreated, $serviceBusConnString, " for ", $applianceName
+            }  
+
             # Policy
-            $policyName = "migrate" + $SiteName + "policy"
-            $existingPolicyObject = Get-AzMigrateReplicationPolicy -PolicyName $policyName -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
+            $policyName = $MigratePrefix + $SiteName + "policy"
+            $existingPolicyObject = Get-AzMigrateReplicationPolicy -PolicyName $policyName -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$existingPolicyObject){
                 $providerSpecificPolicy = [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.VMwareCbtPolicyCreationInput]::new()
                 $providerSpecificPolicy.AppConsistentFrequencyInMinute = 240
@@ -378,14 +350,13 @@ public static int hashForArtifact(String artifact)
 
             # Policy-container mapping
             $mappingName = "containermapping"
-            $serviceBusConnString = "ServiceBusConnectionString"
             $allFabrics = Get-AzMigrateReplicationFabric -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
             foreach($fabric in $allFabrics){
                 if($fabric.Name -match $applianceName){
                     $peContainers = Get-AzMigrateReplicationProtectionContainer -FabricName $fabric.Name -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
                     foreach ($peContainer in $peContainers) {
                         if($peContainer.Name -match $applianceName){
-                            $existingMapping = Get-AzMigrateReplicationProtectionContainerMapping -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -FabricName $fabric.Name -ProtectionContainerName $peContainer.Name -MappingName $mappingName
+                            $existingMapping = Get-AzMigrateReplicationProtectionContainerMapping -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -FabricName $fabric.Name -ProtectionContainerName $peContainer.Name -MappingName $mappingName -ErrorVariable notPresent -ErrorAction SilentlyContinue
                             if($existingMapping){
                                 Write-Host $mappingName, " for ", $applianceName, $LogStringSkipping
                             }else{
@@ -407,16 +378,7 @@ public static int hashForArtifact(String artifact)
                 }
             }
 
-            # ServiceBusConnectionString
-            $serviceBusSecretObject = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $serviceBusConnString
-            if($serviceBusSecretObject){
-                Write-Host $serviceBusConnString, " for ", $applianceName, $LogStringSkipping
-            }else{
-                $serviceBusRootKey = Get-AzServiceBusKey -ResourceGroupName $ResourceGroupName -Namespace $ServiceBusNamespace -Name "RootManageSharedAccessKey"
-                $secret = ConvertTo-SecureString -String $serviceBusRootKey.PrimaryConnectionString -AsPlainText -Force
-                Set-AzKeyVaultSecret -VaultName $KeyVaultName -Name $serviceBusConnString -SecretValue $secret
-                Write-Host $LogStringCreated, $serviceBusConnString, " for ", $applianceName
-            }   
+             
         }
 
         return $true
