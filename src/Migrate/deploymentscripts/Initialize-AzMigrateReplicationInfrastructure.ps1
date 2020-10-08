@@ -53,6 +53,8 @@ param(
 
 process {
         Import-Module -Name Az.Migrate
+
+        Set-PSDebug -Step; foreach ($i in 1..3) {$i}
         if($Scenario -ne "agentlessVMware"){
             throw "We currently support only agentlessVMware."
         }
@@ -112,6 +114,25 @@ public static int hashForArtifact(String artifact)
             $SiteName = $eachApp.SiteId.Split("/")[8]
             $applianceName = $eachApp.ApplianceName
             $HashCodeInput = $SiteName + $TargetRegion
+
+
+            # User cannot change location if it's already set in mapping.
+            $mappingName = "containermapping"
+            $allFabrics = Get-AzMigrateReplicationFabric -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
+
+            foreach($fabric in $allFabrics){
+                if($fabric.Name -match $applianceName){
+                    $peContainers = Get-AzMigrateReplicationProtectionContainer -FabricName $fabric.Name -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
+                    foreach ($peContainer in $peContainers) {
+                        if($peContainer.Name -match $applianceName){
+                            $existingMapping = Get-AzMigrateReplicationProtectionContainerMapping -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -FabricName $fabric.Name -ProtectionContainerName $peContainer.Name -MappingName $mappingName -ErrorVariable notPresent -ErrorAction SilentlyContinue
+                            if(($existingMapping) -and ($existingMapping.ProviderSpecificDetail.TargetLocation -ne $TargetRegion)){
+                                throw "Once the target region is set, it cannot be changed for a Project."
+                            }
+                        }
+                    }
+                }
+            }
 
             $job = Start-Job -ScriptBlock {
                 Add-Type -TypeDefinition $args[0] -Language CSharp 
@@ -221,17 +242,26 @@ public static int hashForArtifact(String artifact)
                 }
                 $accessPolicies += $userAccessPolicy
                 $accessPolicies += $hyperVAccessPolicy
-                $projectRSPObject = Get-AzMigrateReplicationRecoveryServicesProvider -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
-                foreach ($projectRSP in $projectRSPObject) {
-                    if($projectRSP.FabricType -eq "VMwareV2"){
-                        $projectAccessPolicy = @{
-                            "tenantId" = $tenantID;
-                            "objectId" =  $projectRSP.ResourceAccessIdentityDetailObjectId;
-                            "permissions" = $KeyVaultPermissions
+
+                $allFabrics = Get-AzMigrateReplicationFabric -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
+                $selectedFabricName = ""
+                foreach($fabric in $allFabrics){
+                    if($fabric.Name -match $applianceName){
+                        $projectRSPObject = Get-AzMigrateReplicationRecoveryServicesProvider -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
+                        foreach ($projectRSP in $projectRSPObject) {
+                            $projectRSPFabricName = $projectRSP.Id.Split("/")[10]
+                            if(($projectRSP.FabricType -eq "VMwareV2") -and ($fabric.Name -eq $projectRSPFabricName)){
+                                $projectAccessPolicy = @{
+                                    "tenantId" = $tenantID;
+                                    "objectId" =  $projectRSP.ResourceAccessIdentityDetailObjectId;
+                                    "permissions" = $KeyVaultPermissions
+                                }
+                                $accessPolicies += $projectAccessPolicy
+                            }
                         }
-                        $accessPolicies += $projectAccessPolicy
                     }
                 }
+                
                 $keyVaultProperties = @{
                     sku = @{
                         family = "A";
