@@ -36,9 +36,9 @@ param(
     ${ProjectName},
 
     [Parameter(Mandatory)]
-    [System.Management.Automation.SwitchParameter]
+    [System.String]
     # Specifies the server migration scenario for which the replication infrastructure needs to be initialized.
-    ${Vmwareagentless},
+    ${Scenario},
 
     [Parameter(Mandatory)]
     [System.String]
@@ -53,6 +53,9 @@ param(
 
 process {
         Import-Module -Name Az.Migrate
+        if($Scenario -ne "agentlessVMware"){
+            throw "We currently support only agentlessVMware."
+        }
         # Get/Set SubscriptionId
         if(($SubscriptionId -eq $null) -or ($SubscriptionId -eq "")){
             $context = Get-AzContext
