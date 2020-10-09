@@ -74,7 +74,7 @@ process {
         $rg = Get-AzResourceGroup -Name $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
         if(!$rg){
             Write-Host "Creating Resource Group ", $ResourceGroupName
-            New-AzResourceGroup -Name $ResourceGroupName -Location $TargetRegion
+            $output = New-AzResourceGroup -Name $ResourceGroupName -Location $TargetRegion
             Write-Host $ResourceGroupName, " created."
         }
         Write-Host "Selected resource group : ", $ResourceGroupName
@@ -120,16 +120,14 @@ public static int hashForArtifact(String artifact)
             $allFabrics = Get-AzMigrateReplicationFabric -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
 
             foreach($fabric in $allFabrics){
-                if($fabric.Name -match $applianceName){
+               if(($fabric.Property.CustomDetail.InstanceType -ceq "VMwareV2") -and ($fabric.Property.CustomDetail.VmwareSiteId.Split("/")[8] -ceq $SiteName)){
                     $peContainers = Get-AzMigrateReplicationProtectionContainer -FabricName $fabric.Name -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
-                    foreach ($peContainer in $peContainers) {
-                        if($peContainer.Name -match $applianceName){
-                            $existingMapping = Get-AzMigrateReplicationProtectionContainerMapping -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -FabricName $fabric.Name -ProtectionContainerName $peContainer.Name -MappingName $mappingName -ErrorVariable notPresent -ErrorAction SilentlyContinue
-                            if(($existingMapping) -and ($existingMapping.ProviderSpecificDetail.TargetLocation -ne $TargetRegion)){
-                                throw "Once the target region is set, it cannot be changed for a Project."
-                            }
-                        }
-                    }
+                    $peContainer = $peContainers[0]
+                    $existingMapping = Get-AzMigrateReplicationProtectionContainerMapping -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -FabricName $fabric.Name -ProtectionContainerName $peContainer.Name -MappingName $mappingName -ErrorVariable notPresent -ErrorAction SilentlyContinue
+                    if(($existingMapping) -and ($existingMapping.ProviderSpecificDetail.TargetLocation -ne $TargetRegion)){
+                        $targetRegionMismatchExceptionMsg =  $ProjectName + " is already configured for migrating servers to " + $TargetRegion + ". Target Region cannot be modified once configured."
+                        throw $targetRegionMismatchExceptionMsg
+                    }   
                 }
             }
 
@@ -168,7 +166,7 @@ public static int hashForArtifact(String artifact)
             
             $lsaStorageAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $LogStorageAcName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$lsaStorageAccount){
-                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $LogStorageProperties -ResourceName $LogStorageAcName -ResourceType  $StorageType -ApiVersion $StorageApiVersion -Kind  $ResourceKind -Sku  $StorageSku -Tag $ResourceTag -Force
+                $output = New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $LogStorageProperties -ResourceName $LogStorageAcName -ResourceType  $StorageType -ApiVersion $StorageApiVersion -Kind  $ResourceKind -Sku  $StorageSku -Tag $ResourceTag -Force
                 Write-Host $LogStringCreated, $LogStorageAcName
             }else{
                 Write-Host $LogStorageAcName, $LogStringSkipping
@@ -176,7 +174,7 @@ public static int hashForArtifact(String artifact)
 
             $gwyStorageAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $GateWayStorageAcName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$gwyStorageAccount){
-                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $LogStorageProperties -ResourceName $GateWayStorageAcName -ResourceType  $StorageType -ApiVersion $StorageApiVersion -Kind  $ResourceKind -Sku  $StorageSku -Tag $ResourceTag -Force
+                $output = New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $LogStorageProperties -ResourceName $GateWayStorageAcName -ResourceType  $StorageType -ApiVersion $StorageApiVersion -Kind  $ResourceKind -Sku  $StorageSku -Tag $ResourceTag -Force
                 Write-Host $LogStringCreated, $GateWayStorageAcName
             }else{
                 Write-Host $GateWayStorageAcName, $LogStringSkipping
@@ -195,7 +193,7 @@ public static int hashForArtifact(String artifact)
     
             $serviceBusAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -Name $ServiceBusNamespace -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$serviceBusAccount){
-                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $ServiceBusProperties -ResourceName $ServiceBusNamespace -ResourceType  $ServiceBusType -ApiVersion $ServiceBusApiVersion -Kind  $ServieBusKind -Sku  $ServiceBusSku -Tag $ResourceTag -Force
+                $output = New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $ServiceBusProperties -ResourceName $ServiceBusNamespace -ResourceType  $ServiceBusType -ApiVersion $ServiceBusApiVersion -Kind  $ServieBusKind -Sku  $ServiceBusSku -Tag $ResourceTag -Force
                 Write-Host $LogStringCreated, $ServiceBusNamespace
             }else{
                 Write-Host $ServiceBusNamespace, $LogStringSkipping
@@ -245,7 +243,7 @@ public static int hashForArtifact(String artifact)
                 $allFabrics = Get-AzMigrateReplicationFabric -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
                 $selectedFabricName = ""
                 foreach($fabric in $allFabrics){
-                    if($fabric.Name -match $applianceName){
+                    if(($fabric.Property.CustomDetail.InstanceType -ceq "VMwareV2") -and ($fabric.Property.CustomDetail.VmwareSiteId.Split("/")[8] -ceq $SiteName)){
                         $projectRSPObject = Get-AzMigrateReplicationRecoveryServicesProvider -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
                         foreach ($projectRSP in $projectRSPObject) {
                             $projectRSPFabricName = $projectRSP.Id.Split("/")[10]
@@ -273,7 +271,7 @@ public static int hashForArtifact(String artifact)
                     accessPolicies = $accessPolicies
                 }
 
-                New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $keyVaultProperties -ResourceName $KeyVaultName -ResourceType  $KeyVaultType -ApiVersion $KeyVaultApiVersion -Kind $KeyVaultKind -Tag $ResourceTag -Force
+                $output = New-AzResource -ResourceGroupName $ResourceGroupName -Location $TargetRegion -Properties  $keyVaultProperties -ResourceName $KeyVaultName -ResourceType  $KeyVaultType -ApiVersion $KeyVaultApiVersion -Kind $KeyVaultKind -Tag $ResourceTag -Force
                 Write-Host $LogStringCreated, $KeyVaultName
             }
 
@@ -282,7 +280,7 @@ public static int hashForArtifact(String artifact)
             $lockNotes = "This is in use by Azure Migrate project"
             $lsaLock = Get-AzResourceLock -LockName $CommonLockName -ResourceName $LogStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$lsaLock){
-                New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $LogStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
+                $output = New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $LogStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
                 Write-Host $LogStringCreated, $CommonLockName, " for ", $LogStorageAcName
             }else{
                 Write-Host $CommonLockName, " for ", $LogStorageAcName, $LogStringSkipping
@@ -290,7 +288,7 @@ public static int hashForArtifact(String artifact)
             
             $gwyLock = Get-AzResourceLock -LockName $CommonLockName -ResourceName $GateWayStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$gwyLock){
-                New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $GateWayStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
+                $output = New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $GateWayStorageAcName -ResourceType $StorageType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
                 Write-Host $LogStringCreated, $CommonLockName, " for ", $GateWayStorageAcName
             }else{
                 Write-Host $CommonLockName, " for ", $LogStorageAcName, $LogStringSkipping
@@ -298,7 +296,7 @@ public static int hashForArtifact(String artifact)
 
             $sbsnsLock = Get-AzResourceLock -LockName $CommonLockName -ResourceName $ServiceBusNamespace -ResourceType $ServiceBusType -ResourceGroupName $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$sbsnsLock){
-                New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $ServiceBusNamespace -ResourceType $ServiceBusType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
+                $output = New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $ServiceBusNamespace -ResourceType $ServiceBusType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
                 Write-Host $LogStringCreated, $CommonLockName, " for ", $ServiceBusNamespace
             }else{
                 Write-Host $CommonLockName, " for ", $ServiceBusNamespace, $LogStringSkipping
@@ -306,7 +304,7 @@ public static int hashForArtifact(String artifact)
 
             $kvLock = Get-AzResourceLock -LockName $CommonLockName -ResourceName $KeyVaultName -ResourceType $KeyVaultType -ResourceGroupName $ResourceGroupName -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$kvLock){
-                New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $KeyVaultName -ResourceType $KeyVaultType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
+                $output = New-AzResourceLock -LockLevel CanNotDelete -LockName $CommonLockName -ResourceName $KeyVaultName -ResourceType $KeyVaultType -ResourceGroupName $ResourceGroupName -LockNotes $lockNotes -Force
                 Write-Host $LogStringCreated, $CommonLockName, " for ", $KeyVaultName
             }else{
                 Write-Host $CommonLockName, " for ", $KeyVaultName, $LogStringSkipping
@@ -323,16 +321,10 @@ public static int hashForArtifact(String artifact)
             $gwyRoleAssignments = Get-AzRoleAssignment -ObjectId $kvspnid -Scope $gwyStorageAccount.Id -ErrorVariable notPresent -ErrorAction SilentlyContinue
             $lsaRoleAssignments = Get-AzRoleAssignment -ObjectId $kvspnid -Scope $lsaStorageAccount.Id -ErrorVariable notPresent -ErrorAction SilentlyContinue
             if(!$lsaRoleAssignments){
-                New-AzRoleAssignment -ObjectId $kvspnid -Scope $lsaStorageAccount.Id -RoleDefinitionId $roleDefinitionId
-                Write-Host $LogStringCreated, "RoleAssignment", " for ", $LogStorageAcName
-            }else{
-                Write-Host "RoleAssignment", " for ", $LogStorageAcName, $LogStringSkipping
+                $output = New-AzRoleAssignment -ObjectId $kvspnid -Scope $lsaStorageAccount.Id -RoleDefinitionId $roleDefinitionId
             }
             if(!$gwyRoleAssignments){
-                New-AzRoleAssignment -ObjectId $kvspnid -Scope $gwyStorageAccount.Id -RoleDefinitionId $roleDefinitionId
-                Write-Host $LogStringCreated, "RoleAssignment", " for ", $GateWayStorageAcName
-            }else{
-                Write-Host "RoleAssignment", " for ", $GateWayStorageAcName, $LogStringSkipping
+                $output = New-AzRoleAssignment -ObjectId $kvspnid -Scope $gwyStorageAccount.Id -RoleDefinitionId $roleDefinitionId
             }
 
             # SA. SAS definition
@@ -363,7 +355,7 @@ public static int hashForArtifact(String artifact)
             }else{
                 $serviceBusRootKey = Get-AzServiceBusKey -ResourceGroupName $ResourceGroupName -Namespace $ServiceBusNamespace -Name "RootManageSharedAccessKey"
                 $secret = ConvertTo-SecureString -String $serviceBusRootKey.PrimaryConnectionString -AsPlainText -Force
-                Set-AzKeyVaultSecret -VaultName $KeyVaultName -Name $serviceBusConnString -SecretValue $secret
+                $output = Set-AzKeyVaultSecret -VaultName $KeyVaultName -Name $serviceBusConnString -SecretValue $secret
                 Write-Host $LogStringCreated, $serviceBusConnString, " for ", $applianceName
             }  
 
@@ -386,35 +378,29 @@ public static int hashForArtifact(String artifact)
             $mappingName = "containermapping"
             $allFabrics = Get-AzMigrateReplicationFabric -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
             foreach($fabric in $allFabrics){
-                if($fabric.Name -match $applianceName){
+                if(($fabric.Property.CustomDetail.InstanceType -ceq "VMwareV2") -and ($fabric.Property.CustomDetail.VmwareSiteId.Split("/")[8] -ceq $SiteName)){
                     $peContainers = Get-AzMigrateReplicationProtectionContainer -FabricName $fabric.Name -ResourceGroupName $ResourceGroupName -ResourceName $VaultName
-                    foreach ($peContainer in $peContainers) {
-                        if($peContainer.Name -match $applianceName){
-                            $existingMapping = Get-AzMigrateReplicationProtectionContainerMapping -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -FabricName $fabric.Name -ProtectionContainerName $peContainer.Name -MappingName $mappingName -ErrorVariable notPresent -ErrorAction SilentlyContinue
-                            if($existingMapping){
-                                Write-Host $mappingName, " for ", $applianceName, $LogStringSkipping
-                            }else{
-                                $keyVaultAccountDetails = Get-AzKeyVault -ResourceGroupName $ResourceGroupName -Name $KeyVaultName
-                                $gwyStorageAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -ResourceName $GateWayStorageAcName
-                                $providerSpecificInput = [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.VMwareCbtContainerMappingInput]::new()
-                                $providerSpecificInput.InstanceType = "VMwareCbt"
-                                $providerSpecificInput.KeyVaultId = $keyVaultAccountDetails.ResourceId
-                                $providerSpecificInput.KeyVaultUri = $keyVaultAccountDetails.VaultUri
-                                $providerSpecificInput.ServiceBusConnectionStringSecretName = $serviceBusConnString
-                                $providerSpecificInput.StorageAccountId = $gwyStorageAccount.Id
-                                $providerSpecificInput.StorageAccountSasSecretName = $GateWayStorageAcName + "-gwySas"
-                                $providerSpecificInput.TargetLocation = $TargetRegion
-                                New-AzMigrateReplicationProtectionContainerMapping -FabricName $fabric.Name -MappingName $mappingName -ProtectionContainerName $peContainer.Name -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -PolicyId $existingPolicyObject.Id -ProviderSpecificInput $providerSpecificInput -TargetProtectionContainerId  "Microsoft Azure"
-                                Write-Host $LogStringCreated, $mappingName, " for ", $applianceName
-                            }
-                        }
-                    }
+                    $peContainer = $peContainers[0]
+                    $existingMapping = Get-AzMigrateReplicationProtectionContainerMapping -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -FabricName $fabric.Name -ProtectionContainerName $peContainer.Name -MappingName $mappingName -ErrorVariable notPresent -ErrorAction SilentlyContinue
+                    if($existingMapping){
+                        Write-Host $mappingName, " for ", $applianceName, $LogStringSkipping
+                    }else{
+                        $keyVaultAccountDetails = Get-AzKeyVault -ResourceGroupName $ResourceGroupName -Name $KeyVaultName
+                        $gwyStorageAccount = Get-AzResource -ResourceGroupName $ResourceGroupName -ResourceName $GateWayStorageAcName
+                        $providerSpecificInput = [Microsoft.Azure.PowerShell.Cmdlets.Migrate.Models.Api20180110.VMwareCbtContainerMappingInput]::new()
+                        $providerSpecificInput.InstanceType = "VMwareCbt"
+                        $providerSpecificInput.KeyVaultId = $keyVaultAccountDetails.ResourceId
+                        $providerSpecificInput.KeyVaultUri = $keyVaultAccountDetails.VaultUri
+                        $providerSpecificInput.ServiceBusConnectionStringSecretName = $serviceBusConnString
+                        $providerSpecificInput.StorageAccountId = $gwyStorageAccount.Id
+                        $providerSpecificInput.StorageAccountSasSecretName = $GateWayStorageAcName + "-gwySas"
+                        $providerSpecificInput.TargetLocation = $TargetRegion
+                        $output = New-AzMigrateReplicationProtectionContainerMapping -FabricName $fabric.Name -MappingName $mappingName -ProtectionContainerName $peContainer.Name -ResourceGroupName $ResourceGroupName -ResourceName $VaultName -PolicyId $existingPolicyObject.Id -ProviderSpecificInput $providerSpecificInput -TargetProtectionContainerId  "Microsoft Azure"
+                        Write-Host $LogStringCreated, $mappingName, " for ", $applianceName
+                    } 
                 }
-            }
-
-             
+            }  
         }
-
-        return $true
+        Write-Host "Finished successfully."
 }
 
