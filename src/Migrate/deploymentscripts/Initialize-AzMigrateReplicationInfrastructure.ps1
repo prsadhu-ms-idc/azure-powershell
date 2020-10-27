@@ -268,6 +268,7 @@ public static int hashForArtifact(String artifact)
                     enabledForDeployment = $true;
                     enabledForDiskEncryption = $false;
                     enabledForTemplateDeployment = $true;
+                    enableSoftDelete = $true;
                     accessPolicies = $accessPolicies
                 }
 
@@ -403,4 +404,3 @@ public static int hashForArtifact(String artifact)
         }
         Write-Host "Finished successfully."
 }
-
